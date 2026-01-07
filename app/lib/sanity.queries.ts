@@ -193,3 +193,33 @@ export async function getPostByCategoryLabelAndSlug(categorySlug: string, postSl
     categoryLabel: getCategoryLabelFromValue(post.category),
   };
 }
+
+export async function getAllNeighborhoods(): Promise<Neighborhood[]> {
+  return client.fetch(
+    `*[_type == "neighborhood"] {
+      _id,
+      name,
+      "slug": slug.current,
+      town->{
+        "slug": slug.current
+      }
+    }`
+  );
+}
+
+export async function getAllPosts(): Promise<Post[]> {
+  const posts = await client.fetch(
+    `*[_type == "post"] {
+      _id,
+      title,
+      "slug": slug.current,
+      publishedAt,
+      category
+    }`
+  );
+
+  return posts.map((post: any) => ({
+    ...post,
+    categorySlug: getCategorySlugFromValue(post.category),
+  }));
+}
