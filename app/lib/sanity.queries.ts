@@ -1,0 +1,195 @@
+import { client } from "./sanity.client";
+import { PortableTextBlock } from "sanity";
+
+export type Town = {
+  _id: string;
+  name: string;
+  slug: string;
+  overviewShort?: string;
+};
+
+export async function getAllTowns(): Promise<Town[]> {
+  return client.fetch(
+    `*[_type == "town"] | order(name asc) {
+      _id,
+      name,
+      "slug": slug.current,
+      overviewShort
+    }`
+  );
+}
+
+export type Neighborhood = {
+  _id: string;
+  name: string;
+  slug: string;
+  overview?: string;
+  town?: {
+    slug: string;
+  };
+};
+
+export async function getTownBySlug(slug: string): Promise<Town | null> {
+  return client.fetch(
+    `*[_type == "town" && slug.current == $slug][0] {
+      _id,
+      name,
+      "slug": slug.current,
+      overviewShort,
+      overviewLong
+    }`,
+    { slug }
+  );
+}
+
+export async function getNeighborhoodBySlug(townSlug: string, neighborhoodSlug: string): Promise<Neighborhood | null> {
+  return client.fetch(
+    `*[_type == "neighborhood" && slug.current == $neighborhoodSlug && town->slug.current == $townSlug][0] {
+      _id,
+      name,
+      "slug": slug.current,
+      overview,
+      town->{
+        "slug": slug.current
+      }
+    }`,
+    { townSlug, neighborhoodSlug }
+  );
+}
+
+export async function getNeighborhoodsByTown(townSlug: string): Promise<Neighborhood[]> {
+  return client.fetch(
+    `*[_type == "neighborhood" && town->slug.current == $townSlug] | order(name asc) {
+      _id,
+      name,
+      "slug": slug.current,
+      overview
+    }`,
+    { townSlug }
+  );
+}
+
+export type Post = {
+  _id: string;
+  title: string;
+  slug: string;
+  publishedAt: string;
+  category: string;
+  categorySlug: string; // The URL-friendly slug
+  categoryLabel: string; // The UI label
+  author?: string;
+  body?: PortableTextBlock[];
+};
+
+// Map URL slug -> DB Value
+const CATEGORY_SLUG_TO_VALUE: Record<string, string> = {
+  "market-update": "market-update",
+  "community": "community",
+  "real-estate-tips": "tips",
+  "news": "news",
+};
+
+// Map DB Value -> URL Slug
+const CATEGORY_VALUE_TO_SLUG: Record<string, string> = {
+  "market-update": "market-update",
+  "community": "community",
+  "tips": "real-estate-tips",
+  "news": "news",
+};
+
+// Map DB Value -> UI Label
+const CATEGORY_VALUE_TO_LABEL: Record<string, string> = {
+  "market-update": "Market Update",
+  "community": "Community",
+  "tips": "Real Estate Tips",
+  "news": "News",
+};
+
+export function getCategoryValueFromSlug(slug: string): string | undefined {
+  return CATEGORY_SLUG_TO_VALUE[slug];
+}
+
+export function getCategorySlugFromValue(value: string): string {
+  return CATEGORY_VALUE_TO_SLUG[value] || value;
+}
+
+export function getCategoryLabelFromValue(value: string): string {
+  return CATEGORY_VALUE_TO_LABEL[value] || "Uncategorized";
+}
+
+export async function getRecentPosts(limit: number = 100): Promise<Post[]> {
+  const posts = await client.fetch(
+    `*[_type == "post"] | order(publishedAt desc)[0...$limit] {
+      _id,
+      title,
+      "slug": slug.current,
+      publishedAt,
+      category,
+      author
+    }`,
+    { limit }
+  );
+
+  return posts.map((post: any) => ({
+    ...post,
+    categorySlug: getCategorySlugFromValue(post.category),
+    categoryLabel: getCategoryLabelFromValue(post.category),
+  }));
+}
+
+export async function getPostsByCategoryLabel(categorySlug: string): Promise<Post[]> {
+  const categoryValue = getCategoryValueFromSlug(categorySlug);
+
+  if (!categoryValue) {
+    return [];
+  }
+
+  const posts = await client.fetch(
+    `*[_type == "post" && category == $categoryValue] | order(publishedAt desc) {
+            _id,
+            title,
+            "slug": slug.current,
+            publishedAt,
+            category,
+            author
+        }`,
+    { categoryValue }
+  );
+
+  return posts.map((post: any) => ({
+    ...post,
+    categorySlug: getCategorySlugFromValue(post.category),
+    categoryLabel: getCategoryLabelFromValue(post.category),
+  }));
+}
+
+export async function getPostByCategoryLabelAndSlug(categorySlug: string, postSlug: string): Promise<Post | null> {
+  const categoryValue = getCategoryValueFromSlug(categorySlug);
+
+  if (!categoryValue) {
+    return null;
+  }
+
+  const post = await client.fetch(
+    `*[_type == "post" && slug.current == $postSlug && category == $categoryValue][0] {
+            _id,
+            title,
+            "slug": slug.current,
+            publishedAt,
+            category,
+            author,
+            body
+        }`,
+    { postSlug, categoryValue }
+  );
+
+  if (!post) {
+    return null;
+  }
+
+  return {
+    ...post,
+    categorySlug: getCategorySlugFromValue(post.category),
+    categoryLabel: getCategoryLabelFromValue(post.category),
+  };
+}
