@@ -8,6 +8,18 @@ export type Town = {
   overviewShort?: string;
 };
 
+export async function getTownsForHomepage(limit: number = 9): Promise<Town[]> {
+  return client.fetch(
+    `*[_type == "town"] | order(name asc)[0...$limit] {
+      _id,
+      name,
+      "slug": slug.current,
+      overviewShort
+    }`,
+    { limit }
+  );
+}
+
 export async function getAllTowns(): Promise<Town[]> {
   return client.fetch(
     `*[_type == "town"] | order(name asc) {
