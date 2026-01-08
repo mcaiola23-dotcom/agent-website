@@ -4,6 +4,7 @@ import post from './post'
 import faq from './faq'
 import testimonial from './testimonial'
 import videoScript from './videoScript'
+import lead from './lead'
 
 export const schemaTypes = [
     town,
@@ -12,4 +13,5 @@ export const schemaTypes = [
     faq,
     testimonial,
     videoScript,
+    lead,
 ]

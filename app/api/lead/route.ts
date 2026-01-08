@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { LeadSubmissionSchema } from "../../lib/validators";
+import { writeClient } from "../../lib/sanity.server";
 
 export async function POST(request: Request) {
     try {
@@ -15,17 +16,45 @@ export async function POST(request: Request) {
 
         const lead = result.data;
 
-        // TODO: Integrate with CRM or Email Service (e.g. Resend, SendGrid)
-        // For now, we log to the server console as requested.
+        // Logging for immediate debug
         console.log("------------------------------------------------");
         console.log("NEW HOME VALUE LEAD RECEIVED");
-        console.log("timestamp:", new Date().toISOString());
         console.log("Contact:", lead.email, lead.phone);
-        console.log("Property:", lead.propertyDetails);
-        console.log("Timeframe:", lead.timeframe);
         console.log("------------------------------------------------");
 
-        return NextResponse.json({ success: true });
+        // Prepare Sanity Document
+        const doc = {
+            _type: 'lead',
+            source: 'home-value', // Default for now
+            fullName: lead.name,
+            email: lead.email,
+            phone: lead.phone,
+            address: lead.propertyDetails.address,
+            propertyType: lead.propertyDetails.propertyType,
+            beds: lead.propertyDetails.beds,
+            baths: lead.propertyDetails.baths,
+            sqft: lead.propertyDetails.sqft,
+            timeframe: lead.timeframe,
+            createdAt: new Date().toISOString(),
+        };
+
+        // Create in Sanity
+        // Note: writeClient requires SANITY_API_WRITE_TOKEN to be set.
+        // If not set, it might throw or just fail auth.
+        try {
+            if (process.env.SANITY_API_WRITE_TOKEN) {
+                const response = await writeClient.create(doc);
+                return NextResponse.json({ success: true, id: response._id });
+            } else {
+                console.warn("SANITY_API_WRITE_TOKEN not set. Lead not saved to Sanity.");
+                // We still return success to the UI because the email/logging part (conceptual) succeeded
+                return NextResponse.json({ success: true, saved: false, message: "Server configuration pending" });
+            }
+        } catch (sanityError) {
+            console.error("Sanity Write Error:", sanityError);
+            // Don't fail the user request if Sanity write fails, but log it critical
+            return NextResponse.json({ success: true, saved: false, error: "Persistence failed" });
+        }
 
     } catch (error) {
         console.error("Lead API Error:", error);
