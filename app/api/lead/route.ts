@@ -25,16 +25,19 @@ export async function POST(request: Request) {
         // Prepare Sanity Document
         const doc = {
             _type: 'lead',
-            source: 'home-value', // Default for now
+            source: lead.source || 'unknown',
             fullName: lead.name,
             email: lead.email,
             phone: lead.phone,
-            address: lead.propertyDetails.address,
-            propertyType: lead.propertyDetails.propertyType,
-            beds: lead.propertyDetails.beds,
-            baths: lead.propertyDetails.baths,
-            sqft: lead.propertyDetails.sqft,
+            // Property details are optional now
+            address: lead.propertyDetails?.address,
+            propertyType: lead.propertyDetails?.propertyType,
+            beds: lead.propertyDetails?.beds,
+            baths: lead.propertyDetails?.baths,
+            sqft: lead.propertyDetails?.sqft,
+
             timeframe: lead.timeframe,
+            notes: lead.message, // Map message to notes
             createdAt: new Date().toISOString(),
         };
 

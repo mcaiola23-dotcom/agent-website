@@ -11,11 +11,13 @@ export const ValuationRequestSchema = z.object({
 export type ValuationRequest = z.infer<typeof ValuationRequestSchema>;
 
 export const LeadSubmissionSchema = z.object({
-    name: z.string().optional(), // Often split, but simple is fine
+    name: z.string().optional(),
     email: z.string().email(),
     phone: z.string().min(10, "Phone number is too short"),
     timeframe: z.string().optional(),
-    propertyDetails: ValuationRequestSchema,
+    message: z.string().optional(),
+    source: z.string().optional(),
+    propertyDetails: ValuationRequestSchema.optional(),
 });
 
 export type LeadSubmission = z.infer<typeof LeadSubmissionSchema>;
