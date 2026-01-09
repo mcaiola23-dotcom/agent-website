@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import GlobalFooter from "./components/GlobalFooter";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfair = Playfair_Display({
   subsets: ["latin"],
+  variable: "--font-playfair",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -23,19 +23,19 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "RealEstateAgent",
-  "name": "Fairfield Real Estate Agent",
+  "name": "Higgins Group Private Brokerage",
   "image": "https://example.com/logo.png", // Placeholder
   "description": "Expert real estate services in Fairfield County.",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "123 Main St",
-    "addressLocality": "Fairfield",
+    "streetAddress": "1055 Washington Blvd.",
+    "addressLocality": "Stamford",
     "addressRegion": "CT",
-    "postalCode": "06824",
+    "postalCode": "06901",
     "addressCountry": "US"
   },
   "url": "https://example.com",
-  "telephone": "+12035550123", // Placeholder
+  "telephone": "+12036588282",
   "priceRange": "$$$"
 };
 
@@ -47,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${playfair.variable} ${inter.variable} font-sans antialiased min-h-screen flex flex-col bg-slate-50 text-slate-900`}
       >
         <script
           type="application/ld+json"
