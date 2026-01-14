@@ -17,25 +17,31 @@ export default async function Home() {
       <section className="relative bg-slate-50 py-20 lg:py-32 border-b border-slate-200 overflow-hidden">
         <HeroBackgroundCrossfade />
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-            Fairfield County Real Estate Guidance
-          </h1>
-          <p className="text-xl text-slate-700 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-            Professional, data-driven insights to help you navigate buying, selling, and investing in Connecticut's Gold Coast.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/home-value"
-              className="inline-block px-8 py-3 bg-stone-900 hover:bg-stone-800 text-white font-bold rounded-lg shadow-md transition-colors text-lg"
-            >
-              Home Value Estimate
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-block px-8 py-3 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-bold rounded-lg transition-colors text-lg"
-            >
-              Contact Us
-            </Link>
+          <div className="max-w-4xl mx-auto pt-20 pb-16">
+            <p className="text-sm md:text-base font-semibold tracking-[0.25em] text-stone-200 uppercase mb-4 opacity-100">
+              Higgins Group Private Brokerage
+            </p>
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-medium text-stone-50 mb-6 tracking-tight leading-[0.95] font-serif drop-shadow-sm">
+              Fairfield County<br className="hidden md:block" /> Real Estate Guidance
+            </h1>
+            <div className="w-12 h-px bg-stone-500/30 mx-auto mb-8"></div>
+            <p className="font-sans text-lg md:text-xl text-stone-200/95 mb-10 max-w-2xl mx-auto leading-relaxed tracking-wide font-light">
+              Professional, data-driven insights to help you navigate buying, selling, and investing in Connecticut's Gold Coast.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-5 justify-center">
+              <Link
+                href="/home-value"
+                className="inline-block px-8 py-3 bg-stone-900 hover:bg-stone-800 text-white font-bold rounded-lg shadow-lg transition-transform transform hover:-translate-y-0.5 text-lg border border-stone-800"
+              >
+                Home Value Estimate
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-block px-8 py-3 bg-white hover:bg-stone-50 text-stone-900 border border-white font-bold rounded-lg transition-transform transform hover:-translate-y-0.5 shadow-lg text-lg"
+              >
+                Contact Us
+              </Link>
+            </div>
           </div>
         </div>
       </section>

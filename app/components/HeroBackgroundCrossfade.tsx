@@ -43,11 +43,13 @@ export default function HeroBackgroundCrossfade({
 
     return (
         <div className="absolute inset-0 z-0 overflow-hidden bg-slate-100">
-            {/* Neutral Gradient Fallback */}
-            <div className="absolute inset-0 bg-gradient-to-b from-stone-100 to-stone-200" />
-
-            {/* Dark Overlay for Text Readability */}
+            {/* Overlay System for Luxury Readability */}
+            {/* 1. Global subtle tint + Vignette (darker edges) */}
             <div className="absolute inset-0 bg-black/10 z-10" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.4)_100%)] z-10" />
+
+            {/* 2. Centered Radial Scrim (darker center for text contrast, fading out) */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,0.4)_0%,_transparent_60%)] z-10" />
 
             {images.map((src, index) => (
                 <div
