@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllTowns, Town } from "../lib/sanity.queries";
+
+export const metadata: Metadata = {
+  title: "Fairfield County Towns | Explore CT Communities",
+  description:
+    "Discover towns across Fairfield County, Connecticut. Browse Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, Ridgefield, and more.",
+};
 
 export const dynamic = "force-dynamic";
 

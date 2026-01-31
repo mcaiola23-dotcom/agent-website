@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getNeighborhoodBySlug } from "../../../lib/sanity.queries";
@@ -5,6 +6,55 @@ import TownHero from "../../../components/TownHero";
 import Container from "../../../components/Container";
 
 export const dynamic = "force-dynamic";
+
+type Props = {
+    params: Promise<{ townSlug: string; neighborhoodSlug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { townSlug, neighborhoodSlug } = await params;
+    const neighborhood = await getNeighborhoodBySlug(townSlug, neighborhoodSlug);
+
+    if (!neighborhood) {
+        return {
+            title: "Neighborhood Not Found",
+            description: "The requested neighborhood could not be found.",
+        };
+    }
+
+    const townName = neighborhood.town?.name || "Fairfield County";
+    const title = `${neighborhood.name}, ${townName} CT | Neighborhood Guide`;
+    const description =
+        neighborhood.overview ||
+        `Explore ${neighborhood.name} in ${townName}, Connecticut. Discover homes, market trends, and neighborhood highlights.`;
+
+    // Use town image as fallback for neighborhoods
+    const image = `/visual/towns/${townSlug}.jpg`;
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            type: "website",
+            images: [
+                {
+                    url: image,
+                    width: 1200,
+                    height: 630,
+                    alt: `${neighborhood.name} neighborhood in ${townName}, Connecticut`,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: [image],
+        },
+    };
+}
 
 export default async function NeighborhoodPage({
     params,

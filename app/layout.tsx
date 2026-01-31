@@ -16,28 +16,75 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Fairfield Real Estate Agent",
-  description: "Your trusted partner for buying, selling, and investing in Fairfield County real estate.",
-  metadataBase: new URL('https://example.com'), // Placeholder
+  title: {
+    default: "Fairfield County CT Luxury Real Estate | Higgins Group Private Brokerage",
+    template: "%s | Fairfield County Luxury Real Estate",
+  },
+  description:
+    "Expert real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
+  metadataBase: new URL("https://example.com"), // Placeholder — update before launch
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Fairfield County Luxury Real Estate",
+    title: "Fairfield County CT Luxury Real Estate | Higgins Group Private Brokerage",
+    description:
+      "Expert real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
+    images: [
+      {
+        url: "/visual/home/hero-1.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Fairfield County Connecticut luxury real estate",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fairfield County CT Luxury Real Estate | Higgins Group Private Brokerage",
+    description:
+      "Expert real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, and surrounding towns.",
+    images: ["/visual/home/hero-1.jpg"],
+  },
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "RealEstateAgent",
-  "name": "Higgins Group Private Brokerage",
-  "image": "https://example.com/logo.png", // Placeholder
-  "description": "Expert real estate services in Fairfield County.",
-  "address": {
+  name: "Higgins Group Private Brokerage",
+  image: "https://example.com/visual/home/hero-1.jpg", // Placeholder domain
+  description:
+    "Expert luxury real estate services in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
+  address: {
     "@type": "PostalAddress",
-    "streetAddress": "1055 Washington Blvd.",
-    "addressLocality": "Stamford",
-    "addressRegion": "CT",
-    "postalCode": "06901",
-    "addressCountry": "US"
+    streetAddress: "1055 Washington Blvd.",
+    addressLocality: "Stamford",
+    addressRegion: "CT",
+    postalCode: "06901",
+    addressCountry: "US",
   },
-  "url": "https://example.com",
-  "telephone": "+12036588282",
-  "priceRange": "$$$"
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 41.0534,
+    longitude: -73.5387,
+  },
+  url: "https://example.com", // Placeholder — update before launch
+  telephone: "+1-203-658-8282",
+  priceRange: "$$$",
+  areaServed: [
+    { "@type": "City", name: "Greenwich", addressRegion: "CT" },
+    { "@type": "City", name: "Stamford", addressRegion: "CT" },
+    { "@type": "City", name: "Darien", addressRegion: "CT" },
+    { "@type": "City", name: "New Canaan", addressRegion: "CT" },
+    { "@type": "City", name: "Westport", addressRegion: "CT" },
+    { "@type": "City", name: "Fairfield", addressRegion: "CT" },
+    { "@type": "City", name: "Norwalk", addressRegion: "CT" },
+    { "@type": "City", name: "Wilton", addressRegion: "CT" },
+    { "@type": "City", name: "Ridgefield", addressRegion: "CT" },
+  ],
+  sameAs: [
+    "https://higginsgroup.com/", // Brokerage website
+  ],
 };
 
 export default function RootLayout({

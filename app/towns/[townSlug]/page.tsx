@@ -1,11 +1,61 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTownBySlug, getNeighborhoodsByTown } from "../../lib/sanity.queries";
 import { PortableText } from "@portabletext/react";
 import TownHero from "../../components/TownHero";
 import Container from "../../components/Container";
+import TownFAQs from "../../components/TownFAQs";
 
 export const dynamic = "force-dynamic";
+
+type Props = {
+    params: Promise<{ townSlug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { townSlug } = await params;
+    const town = await getTownBySlug(townSlug);
+
+    if (!town) {
+        return {
+            title: "Town Not Found",
+            description: "The requested town could not be found.",
+        };
+    }
+
+    const title = `${town.name} CT Real Estate | Homes, Neighborhoods & Market Info`;
+    const description =
+        town.overviewShort ||
+        `Explore ${town.name}, Connecticut real estate. Browse homes for sale, neighborhoods, schools, and local market insights.`;
+
+    // Use town-specific image if available, otherwise fall back to default
+    const townImage = `/visual/towns/${townSlug}.jpg`;
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            type: "website",
+            images: [
+                {
+                    url: townImage,
+                    width: 1200,
+                    height: 630,
+                    alt: `${town.name}, Connecticut real estate`,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: [townImage],
+        },
+    };
+}
 
 export default async function TownPage({
     params,
@@ -21,8 +71,35 @@ export default async function TownPage({
 
     const neighborhoods = await getNeighborhoodsByTown(townSlug);
 
+    // Place structured data for the town
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Place",
+        name: `${town.name}, Connecticut`,
+        description:
+            town.overviewShort ||
+            `${town.name} is a town in Fairfield County, Connecticut.`,
+        address: {
+            "@type": "PostalAddress",
+            addressLocality: town.name,
+            addressRegion: "CT",
+            addressCountry: "US",
+        },
+        containedInPlace: {
+            "@type": "AdministrativeArea",
+            name: "Fairfield County",
+            addressRegion: "CT",
+        },
+        url: `https://example.com/towns/${townSlug}`, // Placeholder domain
+    };
+
     return (
-        <div className="bg-white min-h-screen">
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <div className="bg-white min-h-screen">
             <TownHero
                 title={town.name}
                 subtitle={town.overviewShort || `Discover the charm of ${town.name}`}
@@ -45,6 +122,52 @@ export default async function TownPage({
                     </div>
                 </Container>
             </section>
+
+            {/* Lifestyle Section */}
+            {town.lifestyle && (
+                <section className="py-16 border-b border-stone-100 bg-stone-50">
+                    <Container>
+                        <div className="max-w-3xl mx-auto">
+                            <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                Living in {town.name}
+                            </h2>
+                            <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                                <p className="whitespace-pre-line">{town.lifestyle}</p>
+                            </div>
+                        </div>
+                    </Container>
+                </section>
+            )}
+
+            {/* Market Notes Section */}
+            {town.marketNotes && (
+                <section className="py-16 border-b border-stone-100">
+                    <Container>
+                        <div className="max-w-3xl mx-auto">
+                            <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                Real Estate in {town.name}
+                            </h2>
+                            <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                                <p className="whitespace-pre-line">{town.marketNotes}</p>
+                            </div>
+                        </div>
+                    </Container>
+                </section>
+            )}
+
+            {/* FAQs Section */}
+            {town.faqs && town.faqs.length > 0 && (
+                <section className="py-16 border-b border-stone-100 bg-stone-50">
+                    <Container>
+                        <div className="max-w-3xl mx-auto">
+                            <h2 className="text-2xl font-bold text-slate-900 mb-8 font-serif">
+                                Frequently Asked Questions About {town.name}
+                            </h2>
+                            <TownFAQs faqs={town.faqs} townName={town.name} />
+                        </div>
+                    </Container>
+                </section>
+            )}
 
             {/* Structured Info Grid */}
             <section className="py-16 bg-stone-50">
@@ -124,5 +247,6 @@ export default async function TownPage({
                 </Container>
             </section>
         </div>
+        </>
     );
 }

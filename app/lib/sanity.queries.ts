@@ -1,11 +1,22 @@
 import { client } from "./sanity.client";
 import { PortableTextBlock } from "sanity";
 
+export type FAQ = {
+  _id: string;
+  question: string;
+  answer: string;
+  schemaEnabled?: boolean;
+};
+
 export type Town = {
   _id: string;
   name: string;
   slug: string;
   overviewShort?: string;
+  overviewLong?: unknown; // Portable text block array
+  lifestyle?: string;
+  marketNotes?: string;
+  faqs?: FAQ[];
 };
 
 export async function getTownsForHomepage(limit: number = 9): Promise<Town[]> {
@@ -37,6 +48,7 @@ export type Neighborhood = {
   slug: string;
   overview?: string;
   town?: {
+    name: string;
     slug: string;
   };
 };
@@ -48,7 +60,15 @@ export async function getTownBySlug(slug: string): Promise<Town | null> {
       name,
       "slug": slug.current,
       overviewShort,
-      overviewLong
+      overviewLong,
+      lifestyle,
+      marketNotes,
+      faqs[]->{
+        _id,
+        question,
+        answer,
+        schemaEnabled
+      }
     }`,
     { slug }
   );
@@ -62,6 +82,7 @@ export async function getNeighborhoodBySlug(townSlug: string, neighborhoodSlug: 
       "slug": slug.current,
       overview,
       town->{
+        name,
         "slug": slug.current
       }
     }`,

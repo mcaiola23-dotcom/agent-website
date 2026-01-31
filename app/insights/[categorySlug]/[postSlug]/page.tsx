@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostByCategoryLabelAndSlug } from "../../../lib/sanity.queries";
 import RichText from "../../../components/RichText";
@@ -12,6 +13,38 @@ type Props = {
     }>;
 };
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { categorySlug, postSlug } = await params;
+    const post = await getPostByCategoryLabelAndSlug(categorySlug, postSlug);
+
+    if (!post) {
+        return {
+            title: "Post Not Found",
+            description: "The requested article could not be found.",
+        };
+    }
+
+    const title = `${post.title} | Fairfield County Insights`;
+    const description = `Read ${post.title} - expert insights on Fairfield County real estate from a local market perspective.`;
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            type: "article",
+            publishedTime: post.publishedAt,
+            authors: post.author ? [post.author] : undefined,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+        },
+    };
+}
+
 export default async function InsightsPostPage(props: Props) {
     const params = await props.params;
     const { categorySlug, postSlug } = params;
@@ -22,8 +55,38 @@ export default async function InsightsPostPage(props: Props) {
         notFound();
     }
 
+    // BlogPosting structured data
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: post.title,
+        datePublished: post.publishedAt,
+        dateModified: post.publishedAt,
+        author: post.author
+            ? {
+                  "@type": "Person",
+                  name: post.author,
+              }
+            : undefined,
+        publisher: {
+            "@type": "RealEstateAgent",
+            name: "Higgins Group Private Brokerage",
+            url: "https://example.com", // Placeholder
+        },
+        mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `https://example.com/insights/${categorySlug}/${postSlug}`,
+        },
+        articleSection: post.categoryLabel,
+    };
+
     return (
-        <article className="container mx-auto px-4 py-12 max-w-4xl">
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <article className="container mx-auto px-4 py-12 max-w-4xl">
             <div className="mb-8">
                 <Link href={`/insights/${categorySlug}`} className="text-blue-600 hover:underline mb-4 inline-block capitalize">
                     &larr; Back to {post.categoryLabel}
@@ -53,5 +116,6 @@ export default async function InsightsPostPage(props: Props) {
                 )}
             </div>
         </article>
+        </>
     );
 }

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getPostsByCategoryLabel, getCategoryLabelFromValue, getCategoryValueFromSlug } from "../../lib/sanity.queries";
 
@@ -8,6 +9,35 @@ type Props = {
         categorySlug: string;
     }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { categorySlug } = await params;
+    const categoryValue = getCategoryValueFromSlug(categorySlug);
+    const categoryLabel = categoryValue
+        ? getCategoryLabelFromValue(categoryValue)
+        : categorySlug.replace(/-/g, " ");
+
+    const formattedLabel =
+        categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1);
+
+    const title = `${formattedLabel} | Fairfield County Real Estate Insights`;
+    const description = `Browse ${formattedLabel.toLowerCase()} articles and insights about Fairfield County real estate. Expert analysis and local market knowledge.`;
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            type: "website",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+        },
+    };
+}
 
 export default async function InsightsCategoryPage(props: Props) {
     const params = await props.params;

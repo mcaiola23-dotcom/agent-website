@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getRecentPosts } from "../lib/sanity.queries";
+
+export const metadata: Metadata = {
+  title: "Insights | Fairfield County Real Estate Market News & Tips",
+  description:
+    "Expert analysis, market updates, and community news for Fairfield County real estate. Stay informed about trends, tips, and local developments.",
+};
 
 export const dynamic = "force-dynamic";
 

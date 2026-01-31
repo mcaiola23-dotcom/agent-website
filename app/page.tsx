@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getRecentPosts, getTownsForHomepage } from "./lib/sanity.queries";
 import HeroBackgroundCrossfade from "./components/HeroBackgroundCrossfade";
 import ExploreTownsSection from "./components/ExploreTownsSection";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "Fairfield County CT Luxury Real Estate | Higgins Group Private Brokerage",
+  },
+  description:
+    "Expert real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
+};
 
 export const dynamic = "force-dynamic";
 
