@@ -6,9 +6,40 @@ export default function GlobalFooter() {
     return (
         <footer className="bg-white border-t border-stone-200">
             <Container>
-                <div className="py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div className="md:col-span-2">
-                        <div className="relative h-20 w-80 sm:h-24 sm:w-96 mb-4">
+                {/* Main Footer Content */}
+                <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+                    {/* Matt Caiola Brand Section */}
+                    <div className="md:col-span-2 lg:col-span-1">
+                        <div className="relative h-14 w-52 mb-4">
+                            <Image
+                                src="/brand/matt-caiola-logo.png"
+                                alt="Matt Caiola Luxury Properties"
+                                fill
+                                className="object-contain object-left"
+                            />
+                        </div>
+                        <p className="text-sm text-stone-500 max-w-xs mb-4">
+                            Personalized luxury real estate services in Fairfield County, Connecticut. Your goals, my commitment.
+                        </p>
+                        <div className="flex flex-col gap-2">
+                            <Link
+                                href="/contact"
+                                className="text-sm font-medium text-stone-900 hover:text-stone-600 transition-colors"
+                            >
+                                Contact Matt →
+                            </Link>
+                            <Link
+                                href="/home-value"
+                                className="text-sm font-medium text-stone-900 hover:text-stone-600 transition-colors"
+                            >
+                                Get Home Value Estimate →
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Higgins Group Brokerage Section */}
+                    <div>
+                        <div className="relative h-16 w-48 mb-4">
                             <Image
                                 src="/brand/higgins-lockup.jpg"
                                 alt="Higgins Group Private Brokerage"
@@ -16,44 +47,65 @@ export default function GlobalFooter() {
                                 className="object-contain object-left"
                             />
                         </div>
-                        <p className="text-sm text-stone-500 max-w-xs">
-                            Luxury real estate services ensuring you make the best move for your lifestyle and investment.
-                        </p>
-                    </div>
-
-                    <div>
-                        <h3 className="text-sm font-semibold text-stone-900 tracking-wider uppercase">Brokerage Office</h3>
-                        <address className="mt-4 not-italic text-base text-stone-500 space-y-2">
-                            <p className="font-medium text-stone-900">Higgins Group Private Brokerage</p>
+                        <address className="not-italic text-sm text-stone-500 space-y-1">
+                            <p className="font-medium text-stone-700">Higgins Group Private Brokerage</p>
                             <p>1055 Washington Blvd.</p>
                             <p>Stamford, CT 06901</p>
-                            <p><a href="tel:2036588282" className="hover:text-stone-900">203-658-8282</a></p>
+                            <p>
+                                <a href="tel:2036588282" className="hover:text-stone-900 transition-colors">
+                                    203-658-8282
+                                </a>
+                            </p>
                         </address>
                     </div>
+
+                    {/* Service Areas */}
                     <div>
-                        <h3 className="text-sm font-semibold text-stone-900 tracking-wider uppercase">Legal</h3>
-                        <ul className="mt-4 space-y-4">
+                        <h3 className="text-sm font-semibold text-stone-900 tracking-wider uppercase mb-4">
+                            Service Areas
+                        </h3>
+                        <ul className="space-y-2 text-sm text-stone-500">
+                            <li><Link href="/towns/greenwich" className="hover:text-stone-900 transition-colors">Greenwich</Link></li>
+                            <li><Link href="/towns/stamford" className="hover:text-stone-900 transition-colors">Stamford</Link></li>
+                            <li><Link href="/towns/darien" className="hover:text-stone-900 transition-colors">Darien</Link></li>
+                            <li><Link href="/towns/new-canaan" className="hover:text-stone-900 transition-colors">New Canaan</Link></li>
+                            <li><Link href="/towns/westport" className="hover:text-stone-900 transition-colors">Westport</Link></li>
+                            <li><Link href="/towns" className="font-medium text-stone-700 hover:text-stone-900 transition-colors">View all towns →</Link></li>
+                        </ul>
+                    </div>
+
+                    {/* Legal Links */}
+                    <div>
+                        <h3 className="text-sm font-semibold text-stone-900 tracking-wider uppercase mb-4">
+                            Legal
+                        </h3>
+                        <ul className="space-y-2 text-sm text-stone-500">
                             <li>
-                                <Link href="/privacy" className="text-base text-stone-500 hover:text-stone-900">
+                                <Link href="/privacy" className="hover:text-stone-900 transition-colors">
                                     Privacy Policy
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/terms" className="text-base text-stone-500 hover:text-stone-900">
+                                <Link href="/terms" className="hover:text-stone-900 transition-colors">
                                     Terms of Service
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/fair-housing" className="text-base text-stone-500 hover:text-stone-900">
+                                <Link href="/fair-housing" className="hover:text-stone-900 transition-colors">
                                     Fair Housing
                                 </Link>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div className="py-8 border-t border-stone-200 flex flex-col md:flex-row justify-between items-center">
-                    <p className="text-base text-stone-400">
-                        &copy; {new Date().getFullYear()} Fairfield Real Estate. All rights reserved.
+
+                {/* Copyright Bar */}
+                <div className="py-6 border-t border-stone-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <p className="text-sm text-stone-400">
+                        &copy; {new Date().getFullYear()} Matt Caiola Luxury Properties. All rights reserved.
+                    </p>
+                    <p className="text-xs text-stone-400">
+                        Licensed with Higgins Group Private Brokerage
                     </p>
                 </div>
             </Container>

@@ -7,6 +7,17 @@ import TownHero from "../../components/TownHero";
 import Container from "../../components/Container";
 import TownFAQs from "../../components/TownFAQs";
 
+// Data Modules
+import { DataModuleGrid } from "../../components/data/DataModule";
+import { AtAGlanceModule } from "../../components/data/AtAGlanceModule";
+import { SchoolsModule } from "../../components/data/SchoolsModule";
+import { WalkScoreModule, WalkScoreModulePlaceholder } from "../../components/data/WalkScoreModule";
+import { PoisModule, PoisModulePlaceholder } from "../../components/data/PoisModule";
+import { TaxesModule } from "../../components/data/TaxesModule";
+import { ListingsModule } from "../../components/data/ListingsModule";
+import { getWalkScore } from "../../lib/data/providers/walkscore.provider";
+import { getPois } from "../../lib/data/providers/places.provider";
+
 export const dynamic = "force-dynamic";
 
 type Props = {
@@ -70,6 +81,41 @@ export default async function TownPage({
     }
 
     const neighborhoods = await getNeighborhoodsByTown(townSlug);
+
+    // Fetch Walk Score data if center coordinates are available
+    let walkScoreResult = null;
+    if (town.center?.lat && town.center?.lng) {
+        walkScoreResult = await getWalkScore({
+            townSlug,
+            townId: town._id,
+            townName: town.name,
+            lat: town.center.lat,
+            lng: town.center.lng,
+        });
+    }
+
+    // Fetch POIs data
+    let poisResult = null;
+    if (town.center?.lat && town.center?.lng) {
+        poisResult = await getPois({
+            townSlug,
+            townId: town._id,
+            townName: town.name,
+            lat: town.center.lat,
+            lng: town.center.lng,
+            curatedPois: town.curatedPois,
+        });
+    } else if (town.curatedPois && town.curatedPois.length > 0) {
+        // Use curated POIs if no coordinates
+        poisResult = await getPois({
+            townSlug,
+            townId: town._id,
+            townName: town.name,
+            lat: 0,
+            lng: 0,
+            curatedPois: town.curatedPois,
+        });
+    }
 
     // Place structured data for the town
     const jsonLd = {
@@ -169,36 +215,67 @@ export default async function TownPage({
                 </section>
             )}
 
-            {/* Structured Info Grid */}
-            <section className="py-16 bg-stone-50">
-                <Container>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        {/* Highlights */}
-                        <div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-4 font-serif">Highlights</h3>
+            {/* Highlights Section */}
+            {town.highlights && town.highlights.length > 0 && (
+                <section className="py-16 bg-stone-50 border-b border-stone-100">
+                    <Container>
+                        <div className="max-w-3xl mx-auto">
+                            <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                What Makes {town.name} Special
+                            </h2>
                             <ul className="space-y-3">
-                                <li className="flex items-start">
-                                    <span className="text-blue-600 mr-2">•</span>
-                                    <span className="text-slate-600">Coastal lifestyle with beach access</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <span className="text-blue-600 mr-2">•</span>
-                                    <span className="text-slate-600">Vibrant downtown and dining</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <span className="text-blue-600 mr-2">•</span>
-                                    <span className="text-slate-600">Easy commute to NYC</span>
-                                </li>
+                                {town.highlights.map((highlight, index) => (
+                                    <li key={index} className="flex items-start">
+                                        <span className="text-blue-600 mr-3 flex-shrink-0">•</span>
+                                        <span className="text-slate-600">{highlight}</span>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
-                        {/* Schools */}
-                        <div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-4 font-serif">Schools</h3>
-                            <p className="text-slate-600 mb-4">Top-rated public and private school options available.</p>
-                            <div className="bg-white p-4 rounded-lg border border-stone-200 text-center text-sm text-stone-500">
-                                School data snapshot coming soon
-                            </div>
-                        </div>
+                    </Container>
+                </section>
+            )}
+
+            {/* Demographics Section */}
+            <section className="py-16 bg-stone-50 border-b border-stone-100">
+                <Container>
+                    <AtAGlanceModule townSlug={townSlug} townName={town.name} />
+                </Container>
+            </section>
+
+            {/* Schools Section */}
+            <section className="py-16 bg-white border-b border-stone-100">
+                <Container>
+                    <SchoolsModule townSlug={townSlug} townName={town.name} />
+                </Container>
+            </section>
+
+            {/* Property Taxes Section */}
+            <section className="py-16 bg-stone-50 border-b border-stone-100">
+                <Container>
+                    <div className="max-w-2xl mx-auto">
+                        <TaxesModule townSlug={townSlug} townName={town.name} />
+                    </div>
+                </Container>
+            </section>
+
+            {/* Walk Score & POIs Section */}
+            <section className="py-16 bg-white border-b border-stone-100">
+                <Container>
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {/* Walk Score */}
+                        {walkScoreResult ? (
+                            <WalkScoreModule result={walkScoreResult} locationName={town.name} />
+                        ) : (
+                            <WalkScoreModulePlaceholder />
+                        )}
+                        
+                        {/* POIs */}
+                        {poisResult && poisResult.pois.length > 0 ? (
+                            <PoisModule result={poisResult} locationName={town.name} />
+                        ) : (
+                            <PoisModulePlaceholder locationName={town.name} />
+                        )}
                     </div>
                 </Container>
             </section>
@@ -234,16 +311,10 @@ export default async function TownPage({
                 </Container>
             </section>
 
-            {/* Listings Placeholder */}
-            <section className="py-20 bg-stone-900 text-white text-center">
+            {/* Listings Section */}
+            <section className="py-16 bg-white">
                 <Container>
-                    <h2 className="text-3xl font-bold mb-6 font-serif">Homes for Sale in {town.name}</h2>
-                    <p className="text-stone-400 mb-8 max-w-2xl mx-auto">
-                        Browse the latest luxury listings in this area.
-                    </p>
-                    <div className="inline-block px-8 py-4 border border-stone-700 bg-stone-800 rounded-lg text-stone-400">
-                        Active listings coming soon
-                    </div>
+                    <ListingsModule townSlug={townSlug} townName={town.name} />
                 </Container>
             </section>
         </div>

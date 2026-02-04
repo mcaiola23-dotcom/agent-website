@@ -2,8 +2,20 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getNeighborhoodBySlug } from "../../../lib/sanity.queries";
+import { PortableText } from "@portabletext/react";
 import TownHero from "../../../components/TownHero";
 import Container from "../../../components/Container";
+
+// Data Modules
+import { DataModuleGrid } from "../../../components/data/DataModule";
+import { AtAGlanceModule } from "../../../components/data/AtAGlanceModule";
+import { SchoolsModule } from "../../../components/data/SchoolsModule";
+import { WalkScoreModule, WalkScoreModulePlaceholder } from "../../../components/data/WalkScoreModule";
+import { PoisModule, PoisModulePlaceholder } from "../../../components/data/PoisModule";
+import { TaxesModule } from "../../../components/data/TaxesModule";
+import { ListingsModule } from "../../../components/data/ListingsModule";
+import { getWalkScore } from "../../../lib/data/providers/walkscore.provider";
+import { getPois } from "../../../lib/data/providers/places.provider";
 
 export const dynamic = "force-dynamic";
 
@@ -69,6 +81,61 @@ export default async function NeighborhoodPage({
     }
 
     const townName = neighborhood.town?.name || "Town";
+    const townId = neighborhood.town?._id || "";
+    const hasDescription =
+        Array.isArray(neighborhood.description) && neighborhood.description.length > 0;
+    const hasHighlights = Boolean(neighborhood.highlights && neighborhood.highlights.length > 0);
+
+    // Determine coordinates - prefer neighborhood center, fallback to town center
+    const center = neighborhood.center || neighborhood.town?.center;
+    const hasCenterCoords = center?.lat && center?.lng;
+
+    // Fetch Walk Score data if coordinates are available
+    let walkScoreResult = null;
+    if (hasCenterCoords) {
+        walkScoreResult = await getWalkScore({
+            townSlug,
+            townId,
+            townName,
+            lat: center!.lat,
+            lng: center!.lng,
+            neighborhoodSlug,
+            neighborhoodId: neighborhood._id,
+            address: `${neighborhood.name}, ${townName}, CT`,
+        });
+    }
+
+    // Fetch POIs data - combine neighborhood and town curated POIs
+    const combinedCuratedPois = [
+        ...(neighborhood.curatedPois || []),
+        ...(neighborhood.town?.curatedPois || []),
+    ];
+    
+    let poisResult = null;
+    if (hasCenterCoords) {
+        poisResult = await getPois({
+            townSlug,
+            townId,
+            townName,
+            lat: center!.lat,
+            lng: center!.lng,
+            curatedPois: combinedCuratedPois,
+            neighborhoodSlug,
+            neighborhoodId: neighborhood._id,
+        });
+    } else if (combinedCuratedPois.length > 0) {
+        // Use curated POIs if no coordinates
+        poisResult = await getPois({
+            townSlug,
+            townId,
+            townName,
+            lat: 0,
+            lng: 0,
+            curatedPois: combinedCuratedPois,
+            neighborhoodSlug,
+            neighborhoodId: neighborhood._id,
+        });
+    }
 
     return (
         <div className="bg-white min-h-screen">
@@ -92,31 +159,94 @@ export default async function NeighborhoodPage({
                     )}
                 </section>
 
-                {/* Structured Data Placeholders */}
-                <section className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-                    <div>
-                        <h3 className="text-xl font-bold text-slate-900 mb-4 font-serif">Housing Market</h3>
-                        <p className="text-slate-600 mb-4">Current market trends for {neighborhood.name}.</p>
-                        <div className="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
-                            <span className="text-stone-400 text-sm">Market data loading...</span>
+                {/* Description */}
+                <section className="max-w-3xl mx-auto mb-16">
+                    <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                        Living in {neighborhood.name}
+                    </h2>
+                    {hasDescription ? (
+                        <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                            <PortableText value={neighborhood.description as any} />
                         </div>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-slate-900 mb-4 font-serif">Highlights</h3>
-                        <ul className="space-y-3 text-slate-600">
-                            <li className="flex items-center"><span className="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>Quiet residential streets</li>
-                            <li className="flex items-center"><span className="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>Close to local parks</li>
-                            <li className="flex items-center"><span className="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>Community atmosphere</li>
+                    ) : (
+                        <p className="text-slate-500 italic">Description coming soon.</p>
+                    )}
+                </section>
+
+                {/* Highlights Section */}
+                {hasHighlights && (
+                    <section className="mb-16">
+                        <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                            What Makes {neighborhood.name} Special
+                        </h2>
+                        <ul className="space-y-3">
+                            {neighborhood.highlights!.map((highlight, index) => (
+                                <li key={index} className="flex items-start">
+                                    <span className="text-blue-600 mr-3 flex-shrink-0">•</span>
+                                    <span className="text-slate-600">{highlight}</span>
+                                </li>
+                            ))}
                         </ul>
+                    </section>
+                )}
+
+                {/* Demographics Section */}
+                <section className="mb-16">
+                    <AtAGlanceModule 
+                        townSlug={townSlug} 
+                        townName={townName} 
+                        isNeighborhoodContext={true} 
+                    />
+                </section>
+
+                {/* Nearby Schools Section */}
+                <section className="mb-16">
+                    <SchoolsModule 
+                        townSlug={townSlug} 
+                        townName={townName}
+                        neighborhoodCenter={hasCenterCoords ? center : undefined}
+                        isNeighborhoodContext={true}
+                    />
+                </section>
+
+                {/* Property Taxes Section */}
+                <section className="mb-16">
+                    <div className="max-w-2xl">
+                        <TaxesModule 
+                            townSlug={townSlug} 
+                            townName={townName} 
+                            isNeighborhoodContext={true} 
+                        />
                     </div>
                 </section>
 
-                {/* Listings Placeholder */}
-                <section className="bg-stone-900 rounded-2xl p-12 text-center text-white">
-                    <h2 className="text-2xl font-bold mb-4 font-serif">Homes for Sale in {neighborhood.name}</h2>
-                    <div className="inline-block px-6 py-3 border border-stone-700 bg-stone-800 rounded text-stone-400">
-                        Active listings coming soon
+                {/* Walk Score & POIs Section */}
+                <section className="mb-16">
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {/* Walk Score */}
+                        {walkScoreResult ? (
+                            <WalkScoreModule result={walkScoreResult} locationName={neighborhood.name} />
+                        ) : (
+                            <WalkScoreModulePlaceholder />
+                        )}
+                        
+                        {/* POIs */}
+                        {poisResult && poisResult.pois.length > 0 ? (
+                            <PoisModule result={poisResult} locationName={neighborhood.name} />
+                        ) : (
+                            <PoisModulePlaceholder locationName={neighborhood.name} />
+                        )}
                     </div>
+                </section>
+
+                {/* Listings Section */}
+                <section>
+                    <ListingsModule 
+                        townSlug={townSlug} 
+                        townName={townName}
+                        neighborhoodSlug={neighborhoodSlug}
+                        neighborhoodName={neighborhood.name}
+                    />
                 </section>
             </Container>
         </div>

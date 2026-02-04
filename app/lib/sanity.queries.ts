@@ -8,6 +8,18 @@ export type FAQ = {
   schemaEnabled?: boolean;
 };
 
+export type GeoPoint = {
+  lat: number;
+  lng: number;
+};
+
+export type CuratedPoi = {
+  category: 'coffee' | 'restaurants' | 'parksTrails' | 'shopping' | 'fitness' | 'family';
+  name: string;
+  note?: string;
+  url?: string;
+};
+
 export type Town = {
   _id: string;
   name: string;
@@ -17,6 +29,9 @@ export type Town = {
   lifestyle?: string;
   marketNotes?: string;
   faqs?: FAQ[];
+  highlights?: string[];
+  center?: GeoPoint;
+  curatedPois?: CuratedPoi[];
 };
 
 export async function getTownsForHomepage(limit: number = 9): Promise<Town[]> {
@@ -47,9 +62,16 @@ export type Neighborhood = {
   name: string;
   slug: string;
   overview?: string;
+  description?: unknown; // Portable text block array
+  highlights?: string[];
+  center?: GeoPoint;
+  curatedPois?: CuratedPoi[];
   town?: {
+    _id: string;
     name: string;
     slug: string;
+    center?: GeoPoint;
+    curatedPois?: CuratedPoi[];
   };
 };
 
@@ -63,6 +85,14 @@ export async function getTownBySlug(slug: string): Promise<Town | null> {
       overviewLong,
       lifestyle,
       marketNotes,
+      highlights,
+      "center": center { "lat": lat, "lng": lng },
+      curatedPois[] {
+        category,
+        name,
+        note,
+        url
+      },
       faqs[]->{
         _id,
         question,
@@ -81,9 +111,26 @@ export async function getNeighborhoodBySlug(townSlug: string, neighborhoodSlug: 
       name,
       "slug": slug.current,
       overview,
-      town->{
+      description,
+      highlights,
+      "center": center { "lat": lat, "lng": lng },
+      curatedPois[] {
+        category,
         name,
-        "slug": slug.current
+        note,
+        url
+      },
+      town->{
+        _id,
+        name,
+        "slug": slug.current,
+        "center": center { "lat": lat, "lng": lng },
+        curatedPois[] {
+          category,
+          name,
+          note,
+          url
+        }
       }
     }`,
     { townSlug, neighborhoodSlug }

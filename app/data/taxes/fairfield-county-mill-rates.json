@@ -1,0 +1,74 @@
+{
+    "metadata": {
+        "source": "Connecticut Office of Policy and Management (OPM)",
+        "sourceUrl": "https://portal.ct.gov/OPM/IGPP/Publications/Mill-Rates",
+        "fiscalYear": "2024-2025",
+        "lastRefreshed": "2025-01-01",
+        "methodology": "Mill rates are set annually by each municipality. Property taxes are calculated as: (Assessed Value × Mill Rate) / 1000. Assessed value in CT is typically 70% of fair market value."
+    },
+    "towns": {
+        "darien": {
+            "name": "Darien",
+            "millRate": 15.58,
+            "assessorUrl": "https://www.darienct.gov/assessor",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        },
+        "fairfield": {
+            "name": "Fairfield",
+            "millRate": 24.99,
+            "assessorUrl": "https://www.fairfieldct.org/assessor",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        },
+        "greenwich": {
+            "name": "Greenwich",
+            "millRate": 11.59,
+            "assessorUrl": "https://www.greenwichct.gov/162/Assessor",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        },
+        "new-canaan": {
+            "name": "New Canaan",
+            "millRate": 16.54,
+            "assessorUrl": "https://www.newcanaanct.gov/government/departments/assessor",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        },
+        "norwalk": {
+            "name": "Norwalk",
+            "millRate": 27.78,
+            "assessorUrl": "https://www.norwalkct.org/217/Tax-Assessor",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        },
+        "ridgefield": {
+            "name": "Ridgefield",
+            "millRate": 27.89,
+            "assessorUrl": "https://www.ridgefieldct.org/assessor",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        },
+        "stamford": {
+            "name": "Stamford",
+            "millRate": 25.96,
+            "assessorUrl": "https://www.stamfordct.gov/government/operations/board-of-finance/tax-assessor",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        },
+        "westport": {
+            "name": "Westport",
+            "millRate": 17.24,
+            "assessorUrl": "https://www.westportct.gov/government/town-departments/assessor",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        },
+        "wilton": {
+            "name": "Wilton",
+            "millRate": 26.40,
+            "assessorUrl": "https://www.wiltonct.org/assessors-office",
+            "assessmentRatio": 70,
+            "fiscalYear": "2024-2025"
+        }
+    }
+}

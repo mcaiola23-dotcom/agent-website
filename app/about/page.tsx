@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/app/components/Container";
 
 export const metadata: Metadata = {
-  title: "About | Fairfield County Real Estate",
+  title: "About Matt Caiola | Fairfield County Real Estate",
   description:
-    "Local expertise and a calm, data-driven approach to buying and selling in Fairfield County, CT. Affiliated with Higgins Group Private Brokerage.",
+    "Meet Matt Caiola, your Fairfield County luxury real estate expert. With a background in corporate finance and personal investment experience, Matt brings analytical rigor and genuine care to every transaction. Licensed with Higgins Group Private Brokerage.",
 };
 
 export default function AboutPage() {
@@ -14,18 +15,33 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="bg-slate-50 border-b border-slate-200">
         <Container className="py-16 md:py-20">
-          <div className="max-w-4xl">
-            <p className="text-xs sm:text-sm font-semibold tracking-[0.25em] text-stone-500 uppercase mb-4">
-              About
-            </p>
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-stone-900 leading-[1.05]">
-              Real estate guidance rooted in Fairfield County.
-            </h1>
-            <div className="w-14 h-px bg-stone-300 my-7" />
-            <p className="text-lg sm:text-xl text-slate-600 leading-relaxed max-w-3xl">
-              I help buyers and sellers navigate Fairfield County with clarity,
-              local knowledge, and a process that respects your time.
-            </p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12">
+            {/* Text Content */}
+            <div className="max-w-2xl lg:flex-1">
+              <p className="text-xs sm:text-sm font-semibold tracking-[0.25em] text-stone-500 uppercase mb-4">
+                About Matt Caiola
+              </p>
+              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-stone-900 leading-[1.05]">
+                Real estate guidance rooted in Fairfield County.
+              </h1>
+              <div className="w-14 h-px bg-stone-300 my-7" />
+              <p className="text-lg sm:text-xl text-slate-600 leading-relaxed">
+                I help buyers and sellers navigate Fairfield County with clarity,
+                local knowledge, and a process that respects your time.
+              </p>
+            </div>
+            {/* Headshot */}
+            <div className="mt-10 lg:mt-0 lg:flex-shrink-0">
+              <div className="relative w-64 h-80 sm:w-72 sm:h-96 lg:w-80 lg:h-[28rem] rounded-2xl overflow-hidden shadow-xl">
+                <Image
+                  src="/brand/matt-headshot.jpg"
+                  alt="Matt Caiola - Fairfield County Real Estate Agent"
+                  fill
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
+            </div>
           </div>
         </Container>
       </section>

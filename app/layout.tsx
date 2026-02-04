@@ -17,33 +17,33 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Fairfield County CT Luxury Real Estate | Higgins Group Private Brokerage",
-    template: "%s | Fairfield County Luxury Real Estate",
+    default: "Matt Caiola | Luxury Real Estate | Fairfield County CT",
+    template: "%s | Matt Caiola | Fairfield County Real Estate",
   },
   description:
-    "Expert real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
+    "Matt Caiola offers expert luxury real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns. Licensed with Higgins Group Private Brokerage.",
   metadataBase: new URL("https://example.com"), // Placeholder — update before launch
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "Fairfield County Luxury Real Estate",
-    title: "Fairfield County CT Luxury Real Estate | Higgins Group Private Brokerage",
+    siteName: "Matt Caiola Luxury Properties",
+    title: "Matt Caiola | Luxury Real Estate | Fairfield County CT",
     description:
-      "Expert real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
+      "Matt Caiola offers expert luxury real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
     images: [
       {
         url: "/visual/home/hero-1.jpg",
         width: 1200,
         height: 630,
-        alt: "Fairfield County Connecticut luxury real estate",
+        alt: "Matt Caiola - Fairfield County Connecticut luxury real estate",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fairfield County CT Luxury Real Estate | Higgins Group Private Brokerage",
+    title: "Matt Caiola | Luxury Real Estate | Fairfield County CT",
     description:
-      "Expert real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, and surrounding towns.",
+      "Matt Caiola offers expert luxury real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, and surrounding towns.",
     images: ["/visual/home/hero-1.jpg"],
   },
 };
@@ -51,26 +51,28 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "RealEstateAgent",
-  name: "Higgins Group Private Brokerage",
-  image: "https://example.com/visual/home/hero-1.jpg", // Placeholder domain
+  name: "Matt Caiola",
+  alternateName: "Matt Caiola Luxury Properties",
+  image: "https://example.com/brand/matt-headshot.jpg", // Placeholder domain
   description:
-    "Expert luxury real estate services in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "1055 Washington Blvd.",
-    addressLocality: "Stamford",
-    addressRegion: "CT",
-    postalCode: "06901",
-    addressCountry: "US",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 41.0534,
-    longitude: -73.5387,
-  },
+    "Matt Caiola provides expert luxury real estate services in Fairfield County, Connecticut. With a background in corporate finance and personal investment experience, Matt brings analytical rigor and genuine care to every transaction. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
   url: "https://example.com", // Placeholder — update before launch
   telephone: "+1-203-658-8282",
   priceRange: "$$$",
+  worksFor: {
+    "@type": "RealEstateAgent",
+    name: "Higgins Group Private Brokerage",
+    url: "https://higginsgroup.com/",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "1055 Washington Blvd.",
+      addressLocality: "Stamford",
+      addressRegion: "CT",
+      postalCode: "06901",
+      addressCountry: "US",
+    },
+    telephone: "+1-203-658-8282",
+  },
   areaServed: [
     { "@type": "City", name: "Greenwich", addressRegion: "CT" },
     { "@type": "City", name: "Stamford", addressRegion: "CT" },
@@ -81,6 +83,13 @@ const jsonLd = {
     { "@type": "City", name: "Norwalk", addressRegion: "CT" },
     { "@type": "City", name: "Wilton", addressRegion: "CT" },
     { "@type": "City", name: "Ridgefield", addressRegion: "CT" },
+  ],
+  knowsAbout: [
+    "Luxury Real Estate",
+    "Fairfield County Real Estate",
+    "Connecticut Gold Coast",
+    "Real Estate Investment",
+    "Property Management",
   ],
   sameAs: [
     "https://higginsgroup.com/", // Brokerage website

@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
         if (!result.success) {
             return NextResponse.json(
-                { status: "error", errors: result.error.errors },
+                { status: "error", errors: result.error.issues },
                 { status: 400 }
             );
         }

@@ -6,10 +6,10 @@ import ExploreTownsSection from "./components/ExploreTownsSection";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Fairfield County CT Luxury Real Estate | Higgins Group Private Brokerage",
+    absolute: "Matt Caiola | Luxury Real Estate | Fairfield County CT",
   },
   description:
-    "Expert real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns.",
+    "Matt Caiola offers personalized luxury real estate guidance in Fairfield County, Connecticut. Serving Greenwich, Stamford, Darien, New Canaan, Westport, Fairfield, Norwalk, and surrounding towns. Licensed with Higgins Group Private Brokerage.",
 };
 
 export const dynamic = "force-dynamic";
@@ -28,14 +28,14 @@ export default async function Home() {
         <div className="relative z-10 container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto pt-20 pb-16">
             <p className="text-sm md:text-base font-semibold tracking-[0.25em] text-stone-200 uppercase mb-4 opacity-100">
-              Higgins Group Private Brokerage
+              Matt Caiola Luxury Properties
             </p>
             <h1 className="text-6xl md:text-7xl lg:text-8xl font-medium text-stone-50 mb-6 tracking-tight leading-[0.95] font-serif drop-shadow-sm">
               Fairfield County<br className="hidden md:block" /> Real Estate Guidance
             </h1>
             <div className="w-12 h-px bg-stone-500/30 mx-auto mb-8"></div>
             <p className="font-sans text-lg md:text-xl text-stone-200/95 mb-10 max-w-2xl mx-auto leading-relaxed tracking-wide font-light">
-              Professional, data-driven insights to help you navigate buying, selling, and investing in Connecticut's Gold Coast.
+              Personal, data-driven insights to help you navigate buying, selling, and investing in Connecticut&apos;s Gold Coast.
             </p>
             <div className="flex flex-col sm:flex-row gap-5 justify-center">
               <Link
@@ -48,7 +48,7 @@ export default async function Home() {
                 href="/contact"
                 className="inline-block px-8 py-3 bg-white hover:bg-stone-50 text-stone-900 border border-white font-bold rounded-lg transition-transform transform hover:-translate-y-0.5 shadow-lg text-lg"
               >
-                Contact Us
+                Contact Matt
               </Link>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to make a move?</h2>
           <p className="text-stone-300 text-lg mb-10 max-w-2xl mx-auto">
-            Whether you're curious about your home's value or ready to start touring, let's start the conversation.
+            Whether you&apos;re curious about your home&apos;s value or ready to start touring, I&apos;m here to help you take the next step.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -118,7 +118,7 @@ export default async function Home() {
               href="/contact"
               className="inline-block px-8 py-3 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-colors"
             >
-              Contact Us
+              Contact Matt
             </Link>
           </div>
         </div>

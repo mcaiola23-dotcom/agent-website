@@ -22,6 +22,12 @@ export default defineType({
             validation: (Rule) => Rule.required(),
         }),
         defineField({
+            name: 'center',
+            title: 'Center Coordinates',
+            description: 'Representative lat/lng for the town (e.g., town hall/downtown). Used for geo-based data modules.',
+            type: 'geopoint',
+        }),
+        defineField({
             name: 'overviewShort',
             title: 'Short Overview',
             type: 'text',
@@ -48,6 +54,61 @@ export default defineType({
             title: 'FAQs',
             type: 'array',
             of: [{ type: 'reference', to: { type: 'faq' } }],
+        }),
+        defineField({
+            name: 'highlights',
+            title: 'Highlights',
+            description: 'Key highlights about this town (5-7 bullet points with specific local details)',
+            type: 'array',
+            of: [{ type: 'string' }],
+        }),
+        defineField({
+            name: 'curatedPois',
+            title: 'Curated Points of Interest',
+            description: 'Manually curated local favorites - fallback when Google Places is unavailable',
+            type: 'array',
+            of: [
+                {
+                    type: 'object',
+                    name: 'curatedPoi',
+                    title: 'Point of Interest',
+                    fields: [
+                        defineField({
+                            name: 'category',
+                            title: 'Category',
+                            type: 'string',
+                            options: {
+                                list: [
+                                    { title: 'Coffee', value: 'coffee' },
+                                    { title: 'Restaurants', value: 'restaurants' },
+                                    { title: 'Parks & Trails', value: 'parksTrails' },
+                                    { title: 'Shopping', value: 'shopping' },
+                                    { title: 'Fitness', value: 'fitness' },
+                                    { title: 'Family', value: 'family' },
+                                ],
+                            },
+                            validation: (Rule) => Rule.required(),
+                        }),
+                        defineField({
+                            name: 'name',
+                            title: 'Name',
+                            type: 'string',
+                            validation: (Rule) => Rule.required(),
+                        }),
+                        defineField({
+                            name: 'note',
+                            title: 'Note',
+                            description: 'Short description or why this is a local favorite',
+                            type: 'string',
+                        }),
+                        defineField({
+                            name: 'url',
+                            title: 'Website URL',
+                            type: 'url',
+                        }),
+                    ],
+                },
+            ],
         }),
         defineField({
             name: 'seoTitle',
