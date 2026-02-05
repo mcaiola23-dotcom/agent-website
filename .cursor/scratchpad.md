@@ -176,18 +176,14 @@ The Sanity schemas are already in place and need no modifications:
   - Keep existing placeholders for schools/listings
 - Success criteria: Town pages render all Sanity-driven content with proper heading hierarchy
 
-**2. Add FAQ Rendering Component + Section**
-- Create reusable `TownFAQs` component (accessible accordion or simple list)
-- Render FAQs on town pages with proper H2/H3 hierarchy
-- Apply styling consistent with existing design system
-- Success criteria: FAQs display when present in Sanity; hidden gracefully when empty
+**3. Populate Town Long-Form Content (Sanity) (PARTIAL)**
+- [x] About / Living In / Real Estate content done for all towns.
+- [ ] **OPEN ITEM**: Missing FAQs for New Canaan, Norwalk, Ridgefield, Stamford, Wilton.
 
-**3. Populate Town Long-Form Content (Sanity)**
-- Via Sanity Studio or MCP tools, add editorial content to at least 3-4 towns:
-  - Westport, Fairfield, Greenwich, Darien (priority towns)
-  - Content: lifestyle description, market notes, 2-3 FAQs per town
-- Content must be premium, local-specific, and compliance-safe (no unverifiable claims)
-- Success criteria: 3-4 towns have populated long-form content visible on site
+**4. Create Editorial Calendar (COMPLETE)**
+
+**Success Criteria (Ticket 13)**
+- All towns have full long-form content including FAQs.
 
 **4. Create Editorial Calendar + Publish Initial Insights Batch**
 - Document editorial calendar in `.cursor/editorial-calendar.md`:
@@ -790,14 +786,10 @@ This is the recommended step-by-step order for an implementation agent (Opus) to
 - Page(s) feel premium and aligned with Matt’s positioning (finance + investor experience)
 - Clear service scope; no unverifiable performance claims
 
-### Ticket 19 — Live Chat + AI Chatbot (Pre-launch build; optional)
+### Ticket 19 — Live Chat + AI Chatbot (Post-Launch; optional)
 
 **Goal**: Improve lead capture and responsiveness without harming premium UX.
-
-**Subtasks**
-- Choose platform (Intercom/Crisp/Tidio/Chatwoot/custom) and define requirements:
-  - Office hours, response expectations, escalation path, spam controls
-- Define “AI scope” carefully (FAQs, scheduling prompts, routing) and avoid risky claims
+**Status**: Deferred to post-launch.
 - Implement human escalation (email/SMS) if desired
 
 **Success criteria**
@@ -1238,56 +1230,45 @@ This is the execution order we will hand to the executing agent. The agent shoul
   - Success criteria: 24–40 royalty-free photos exist in `public/visual/listings/`; mock listings have 3–8 photos each; listing detail modal gallery looks realistic.
 - [x] **15A-5: Build luxury Home Search UI (filters + results list + map pane)**
   - Success criteria: desktop split view works; mobile list/map toggle works; no “dashboard-y” styling.
-- [ ] **15A-5B: Listing Detail Modal (gallery + favorite + Matt inquiry card + click-to-call)**
+- [x] **15A-5B: Listing Detail Modal (gallery + favorite + Matt inquiry card + click-to-call)**
   - Success criteria: clicking a listing opens a premium listing detail modal over the map; favorites work; inquiry card displays Matt headshot and uses the listing address; mobile shows “Call Matt” with `tel:914-325-6746`.
-- [ ] **15A-5D: Address search bar + autocomplete (opens listing modal)**
+- [x] **15A-5D: Address search bar + autocomplete (opens listing modal)**
   - Success criteria: debounced autocomplete returns matching listings; keyboard + click selection opens the correct listing modal; dropdown looks premium and matches site styling.
-- [ ] **15A-5C: Listing inquiry lead capture (API + Sanity tagging)**
+- [x] **15A-5C: Listing inquiry lead capture (API + Sanity tagging)**
   - Success criteria: inquiry submits successfully and is stored as a lead with `source: listing-inquiry` and listing fields present.
-- [ ] **15A-6: URL-driven search state (shareable links)**
-  - Success criteria: copy/paste URL reproduces the same results and map state (as applicable).
-- [ ] **15A-7: Saved homes (local-first)**
+- [x] **15A-6: URL-driven search state (shareable links)**
+  - Success criteria: copy/paste URL reproduces the same results and map state (as applicable); deep linking to listening modal works.
+- [x] **15A-7: Saved homes (local-first)**
   - Success criteria: user can save/unsave; saved state persists across refresh; “Saved” panel works.
-- [ ] **15A-8: Saved searches (local-first)**
+- [x] **15A-8: Saved searches (local-first)**
   - Success criteria: user can name + save a search; re-running restores filters; delete works.
 
 - **Phase 2 (embeds on Town + Neighborhood pages)**
-- [ ] **15A-9: Town + Neighborhood map embeds (Active + Pending default)**
+- [x] **15A-9: Town + Neighborhood map embeds (Active + Pending default)**
   - Success criteria: map appears on both page types and defaults correctly; link to `/home-search` passes context.
-- [ ] **15A-10: Luxury polish pass (icons/colors/cards/hover states)**
+- [x] **15A-10: Luxury polish pass (icons/colors/cards/hover states)**
   - Success criteria: UI looks bespoke and consistent with the site; no loud defaults; no “AI template” feel.
-- [ ] **15A-11: QA pass**
+- [x] **15A-11: QA pass**
   - Success criteria: no console errors, no key leakage, no CLS, works on mobile/desktop.
+- [x] **15A-12: Refine Search UI**
+  - Success criteria: Multi-select status/town filters; Enter key submits.
+
+### Phase 2: User Accounts & Profiles (Next)
+- [ ] **15.B-1: Authentication (Clerk/NextAuth)**
+  - Implement basic Sign Up / Login / Sign Out.
+- [ ] **15.B-2: Saved Homes & Searches**
+  - Sync local storage to database on login.
+- [ ] **15.B-3: Lead Notifications**
+  - Email alerts on new signups/saves.
 
 ---
 
-## Ticket 15.B — Real IDX Provider Swap (Post-Agreement) (PLANNED)
-
-**Goal**: Replace mock provider with real IDX provider while preserving:
-- `/home-search` UX
-- Town/Neighborhood map embeds
-- Saved homes/searches (and optional sync)
-
-**Subtasks**
-- Select IDX vendor + integration mode (API preferred over iframe for premium UX)
-- Implement `IdxListingsProvider` to satisfy the same `ListingsProvider` contract
-- Add IDX-required attribution/disclaimers in UI (listing cards + detail, if required)
-- Validate compliance with MLS + Higgins Group Private Brokerage
-
-**Success criteria**
-- Real listings render through the same UI with required attribution and compliance language; performance remains acceptable.
-
-### Ticket 14 — Launch Prep (Final step)
-
+## Ticket 14 — Launch Prep
 **Goal**: Launch safely with professional QA, analytics, and crawl readiness.
-
-**Subtasks (suggested sequencing)**
-- Keep `robots.txt` blocking indexing until explicit sign-off
-- Staging deploy review + full desktop/mobile QA
-- Tracking + measurement (analytics + conversion events)
-- Search Console connection + sitemap submission
-- Final compliance sign-off (brokerage + Fair Housing + Home Value language)
-- Flip indexing only after QA/compliance pass
+**Subtasks**
+- [ ] **Analytics (PostHog)** Setup
+- [ ] **Real IDX Integration** (Provider Swap)
+- [ ] Compliance sign-off & Indexing flip
 
 **Success criteria**
 - Site is stable on production domain; no critical UX issues

@@ -17,6 +17,7 @@ import { TaxesModule } from "../../components/data/TaxesModule";
 import { ListingsModule } from "../../components/data/ListingsModule";
 import { getWalkScore } from "../../lib/data/providers/walkscore.provider";
 import { getPois } from "../../lib/data/providers/places.provider";
+import { TOWN_CENTERS } from "../../lib/data/town-centers";
 
 export const dynamic = "force-dynamic";
 
@@ -146,178 +147,184 @@ export default async function TownPage({
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <div className="bg-white min-h-screen">
-            <TownHero
-                title={town.name}
-                subtitle={town.overviewShort || `Discover the charm of ${town.name}`}
-                imageSlug={townSlug}
-                parentLink={{ href: "/towns", label: "Towns" }}
-            />
+                <TownHero
+                    title={town.name}
+                    subtitle={town.overviewShort || `Discover the charm of ${town.name}`}
+                    imageSlug={townSlug}
+                    parentLink={{ href: "/towns", label: "Towns" }}
+                />
 
-            {/* Overview Section */}
-            <section className="py-16 border-b border-stone-100">
-                <Container>
-                    <div className="max-w-3xl mx-auto">
-                        <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">About {town.name}</h2>
-                        {town.overviewLong ? (
-                            <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
-                                <PortableText value={town.overviewLong as any} />
-                            </div>
-                        ) : (
-                            <p className="text-slate-500 italic">Description coming soon.</p>
-                        )}
-                    </div>
-                </Container>
-            </section>
-
-            {/* Lifestyle Section */}
-            {town.lifestyle && (
-                <section className="py-16 border-b border-stone-100 bg-stone-50">
-                    <Container>
-                        <div className="max-w-3xl mx-auto">
-                            <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
-                                Living in {town.name}
-                            </h2>
-                            <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
-                                <p className="whitespace-pre-line">{town.lifestyle}</p>
-                            </div>
-                        </div>
-                    </Container>
-                </section>
-            )}
-
-            {/* Market Notes Section */}
-            {town.marketNotes && (
+                {/* Overview Section */}
                 <section className="py-16 border-b border-stone-100">
                     <Container>
                         <div className="max-w-3xl mx-auto">
-                            <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
-                                Real Estate in {town.name}
-                            </h2>
-                            <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
-                                <p className="whitespace-pre-line">{town.marketNotes}</p>
+                            <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">About {town.name}</h2>
+                            {town.overviewLong ? (
+                                <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                                    <PortableText value={town.overviewLong as any} />
+                                </div>
+                            ) : (
+                                <p className="text-slate-500 italic">Description coming soon.</p>
+                            )}
+                        </div>
+                    </Container>
+                </section>
+
+                {/* Lifestyle Section */}
+                {town.lifestyle && (
+                    <section className="py-16 border-b border-stone-100 bg-stone-50">
+                        <Container>
+                            <div className="max-w-3xl mx-auto">
+                                <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                    Living in {town.name}
+                                </h2>
+                                <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                                    <p className="whitespace-pre-line">{town.lifestyle}</p>
+                                </div>
                             </div>
-                        </div>
-                    </Container>
-                </section>
-            )}
+                        </Container>
+                    </section>
+                )}
 
-            {/* FAQs Section */}
-            {town.faqs && town.faqs.length > 0 && (
-                <section className="py-16 border-b border-stone-100 bg-stone-50">
-                    <Container>
-                        <div className="max-w-3xl mx-auto">
-                            <h2 className="text-2xl font-bold text-slate-900 mb-8 font-serif">
-                                Frequently Asked Questions About {town.name}
-                            </h2>
-                            <TownFAQs faqs={town.faqs} townName={town.name} />
-                        </div>
-                    </Container>
-                </section>
-            )}
+                {/* Market Notes Section */}
+                {town.marketNotes && (
+                    <section className="py-16 border-b border-stone-100">
+                        <Container>
+                            <div className="max-w-3xl mx-auto">
+                                <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                    Real Estate in {town.name}
+                                </h2>
+                                <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                                    <p className="whitespace-pre-line">{town.marketNotes}</p>
+                                </div>
+                            </div>
+                        </Container>
+                    </section>
+                )}
 
-            {/* Highlights Section */}
-            {town.highlights && town.highlights.length > 0 && (
+                {/* FAQs Section */}
+                {town.faqs && town.faqs.length > 0 && (
+                    <section className="py-16 border-b border-stone-100 bg-stone-50">
+                        <Container>
+                            <div className="max-w-3xl mx-auto">
+                                <h2 className="text-2xl font-bold text-slate-900 mb-8 font-serif">
+                                    Frequently Asked Questions About {town.name}
+                                </h2>
+                                <TownFAQs faqs={town.faqs} townName={town.name} />
+                            </div>
+                        </Container>
+                    </section>
+                )}
+
+                {/* Highlights Section */}
+                {town.highlights && town.highlights.length > 0 && (
+                    <section className="py-16 bg-stone-50 border-b border-stone-100">
+                        <Container>
+                            <div className="max-w-3xl mx-auto">
+                                <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                    What Makes {town.name} Special
+                                </h2>
+                                <ul className="space-y-3">
+                                    {town.highlights.map((highlight, index) => (
+                                        <li key={index} className="flex items-start">
+                                            <span className="text-blue-600 mr-3 flex-shrink-0">•</span>
+                                            <span className="text-slate-600">{highlight}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </Container>
+                    </section>
+                )}
+
+                {/* Demographics Section */}
                 <section className="py-16 bg-stone-50 border-b border-stone-100">
                     <Container>
-                        <div className="max-w-3xl mx-auto">
-                            <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
-                                What Makes {town.name} Special
-                            </h2>
-                            <ul className="space-y-3">
-                                {town.highlights.map((highlight, index) => (
-                                    <li key={index} className="flex items-start">
-                                        <span className="text-blue-600 mr-3 flex-shrink-0">•</span>
-                                        <span className="text-slate-600">{highlight}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                        <AtAGlanceModule townSlug={townSlug} townName={town.name} />
+                    </Container>
+                </section>
+
+                {/* Schools Section */}
+                <section className="py-16 bg-white border-b border-stone-100">
+                    <Container>
+                        <SchoolsModule townSlug={townSlug} townName={town.name} />
+                    </Container>
+                </section>
+
+                {/* Property Taxes Section */}
+                <section className="py-16 bg-stone-50 border-b border-stone-100">
+                    <Container>
+                        <div className="max-w-2xl mx-auto">
+                            <TaxesModule townSlug={townSlug} townName={town.name} />
                         </div>
                     </Container>
                 </section>
-            )}
 
-            {/* Demographics Section */}
-            <section className="py-16 bg-stone-50 border-b border-stone-100">
-                <Container>
-                    <AtAGlanceModule townSlug={townSlug} townName={town.name} />
-                </Container>
-            </section>
+                {/* Walk Score & POIs Section */}
+                <section className="py-16 bg-white border-b border-stone-100">
+                    <Container>
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {/* Walk Score */}
+                            {walkScoreResult ? (
+                                <WalkScoreModule result={walkScoreResult} locationName={town.name} />
+                            ) : (
+                                <WalkScoreModulePlaceholder />
+                            )}
 
-            {/* Schools Section */}
-            <section className="py-16 bg-white border-b border-stone-100">
-                <Container>
-                    <SchoolsModule townSlug={townSlug} townName={town.name} />
-                </Container>
-            </section>
-
-            {/* Property Taxes Section */}
-            <section className="py-16 bg-stone-50 border-b border-stone-100">
-                <Container>
-                    <div className="max-w-2xl mx-auto">
-                        <TaxesModule townSlug={townSlug} townName={town.name} />
-                    </div>
-                </Container>
-            </section>
-
-            {/* Walk Score & POIs Section */}
-            <section className="py-16 bg-white border-b border-stone-100">
-                <Container>
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {/* Walk Score */}
-                        {walkScoreResult ? (
-                            <WalkScoreModule result={walkScoreResult} locationName={town.name} />
-                        ) : (
-                            <WalkScoreModulePlaceholder />
-                        )}
-                        
-                        {/* POIs */}
-                        {poisResult && poisResult.pois.length > 0 ? (
-                            <PoisModule result={poisResult} locationName={town.name} />
-                        ) : (
-                            <PoisModulePlaceholder locationName={town.name} />
-                        )}
-                    </div>
-                </Container>
-            </section>
-
-            {/* Neighborhoods */}
-            <section className="py-16 border-b border-stone-100">
-                <Container>
-                    <h2 className="text-3xl font-bold text-slate-900 mb-8 font-serif text-center">Neighborhoods</h2>
-                    {neighborhoods.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {neighborhoods.map((neighborhood) => (
-                                <Link
-                                    key={neighborhood._id}
-                                    href={`/towns/${townSlug}/${neighborhood.slug}`}
-                                    className="group block p-6 bg-white border border-stone-200 rounded-xl shadow-sm hover:shadow-lg transition-all hover:border-blue-300"
-                                >
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
-                                        {neighborhood.name}
-                                    </h3>
-                                    {neighborhood.overview && (
-                                        <p className="text-slate-600 line-clamp-3 text-sm">
-                                            {neighborhood.overview}
-                                        </p>
-                                    )}
-                                </Link>
-                            ))}
+                            {/* POIs */}
+                            {poisResult && poisResult.pois.length > 0 ? (
+                                <PoisModule result={poisResult} locationName={town.name} />
+                            ) : (
+                                <PoisModulePlaceholder locationName={town.name} />
+                            )}
                         </div>
-                    ) : (
-                        <div className="text-center py-10 bg-stone-50 rounded-lg">
-                            <p className="text-slate-500">Neighborhood guides coming soon for {town.name}.</p>
-                        </div>
-                    )}
-                </Container>
-            </section>
+                    </Container>
+                </section>
 
-            {/* Listings Section */}
-            <section className="py-16 bg-white">
-                <Container>
-                    <ListingsModule townSlug={townSlug} townName={town.name} />
-                </Container>
-            </section>
-        </div>
+                {/* Neighborhoods */}
+                <section className="py-16 border-b border-stone-100">
+                    <Container>
+                        <h2 className="text-3xl font-bold text-slate-900 mb-8 font-serif text-center">Neighborhoods</h2>
+                        {neighborhoods.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {neighborhoods.map((neighborhood) => (
+                                    <Link
+                                        key={neighborhood._id}
+                                        href={`/towns/${townSlug}/${neighborhood.slug}`}
+                                        className="group block p-6 bg-white border border-stone-200 rounded-xl shadow-sm hover:shadow-lg transition-all hover:border-blue-300"
+                                    >
+                                        <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                                            {neighborhood.name}
+                                        </h3>
+                                        {neighborhood.overview && (
+                                            <p className="text-slate-600 line-clamp-3 text-sm">
+                                                {neighborhood.overview}
+                                            </p>
+                                        )}
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-10 bg-stone-50 rounded-lg">
+                                <p className="text-slate-500">Neighborhood guides coming soon for {town.name}.</p>
+                            </div>
+                        )}
+                    </Container>
+                </section>
+
+
+
+                {/* Listings Section */}
+                <section className="py-16 bg-white">
+                    <Container>
+                        <ListingsModule
+                            townSlug={townSlug}
+                            townName={town.name}
+                            center={TOWN_CENTERS[townSlug]}
+                        />
+                    </Container>
+                </section>
+            </div>
         </>
     );
 }

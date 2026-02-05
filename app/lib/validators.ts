@@ -18,6 +18,9 @@ export const LeadSubmissionSchema = z.object({
     message: z.string().optional(),
     source: z.string().optional(),
     propertyDetails: ValuationRequestSchema.optional(),
+    listingId: z.string().optional(),
+    listingUrl: z.string().optional(),
+    listingAddress: z.string().optional(),
 });
 
 export type LeadSubmission = z.infer<typeof LeadSubmissionSchema>;

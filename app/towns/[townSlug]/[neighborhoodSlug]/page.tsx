@@ -16,6 +16,7 @@ import { TaxesModule } from "../../../components/data/TaxesModule";
 import { ListingsModule } from "../../../components/data/ListingsModule";
 import { getWalkScore } from "../../../lib/data/providers/walkscore.provider";
 import { getPois } from "../../../lib/data/providers/places.provider";
+import { TOWN_CENTERS } from "../../../lib/data/town-centers";
 
 export const dynamic = "force-dynamic";
 
@@ -110,7 +111,7 @@ export default async function NeighborhoodPage({
         ...(neighborhood.curatedPois || []),
         ...(neighborhood.town?.curatedPois || []),
     ];
-    
+
     let poisResult = null;
     if (hasCenterCoords) {
         poisResult = await getPois({
@@ -192,17 +193,17 @@ export default async function NeighborhoodPage({
 
                 {/* Demographics Section */}
                 <section className="mb-16">
-                    <AtAGlanceModule 
-                        townSlug={townSlug} 
-                        townName={townName} 
-                        isNeighborhoodContext={true} 
+                    <AtAGlanceModule
+                        townSlug={townSlug}
+                        townName={townName}
+                        isNeighborhoodContext={true}
                     />
                 </section>
 
                 {/* Nearby Schools Section */}
                 <section className="mb-16">
-                    <SchoolsModule 
-                        townSlug={townSlug} 
+                    <SchoolsModule
+                        townSlug={townSlug}
                         townName={townName}
                         neighborhoodCenter={hasCenterCoords ? center : undefined}
                         isNeighborhoodContext={true}
@@ -212,10 +213,10 @@ export default async function NeighborhoodPage({
                 {/* Property Taxes Section */}
                 <section className="mb-16">
                     <div className="max-w-2xl">
-                        <TaxesModule 
-                            townSlug={townSlug} 
-                            townName={townName} 
-                            isNeighborhoodContext={true} 
+                        <TaxesModule
+                            townSlug={townSlug}
+                            townName={townName}
+                            isNeighborhoodContext={true}
                         />
                     </div>
                 </section>
@@ -229,7 +230,7 @@ export default async function NeighborhoodPage({
                         ) : (
                             <WalkScoreModulePlaceholder />
                         )}
-                        
+
                         {/* POIs */}
                         {poisResult && poisResult.pois.length > 0 ? (
                             <PoisModule result={poisResult} locationName={neighborhood.name} />
@@ -239,13 +240,16 @@ export default async function NeighborhoodPage({
                     </div>
                 </section>
 
+
+
                 {/* Listings Section */}
                 <section>
-                    <ListingsModule 
-                        townSlug={townSlug} 
+                    <ListingsModule
+                        townSlug={townSlug}
                         townName={townName}
                         neighborhoodSlug={neighborhoodSlug}
                         neighborhoodName={neighborhood.name}
+                        center={TOWN_CENTERS[townSlug]}
                     />
                 </section>
             </Container>

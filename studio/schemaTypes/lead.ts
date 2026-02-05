@@ -18,12 +18,24 @@ export default defineType({
             type: 'string',
             options: {
                 list: [
-                    { title: 'Home Value Estimate', value: 'home-value' },
                     { title: 'Contact Form', value: 'contact' },
+                    { title: 'Listing Inquiry', value: 'listing-inquiry' },
                     { title: 'Unknown', value: 'unknown' },
                 ],
             },
             initialValue: 'unknown',
+        }),
+        defineField({
+            name: 'listingId',
+            title: 'Listing ID',
+            type: 'string',
+            hidden: ({ document }) => document?.source !== 'listing-inquiry',
+        }),
+        defineField({
+            name: 'listingUrl',
+            title: 'Listing URL',
+            type: 'string',
+            hidden: ({ document }) => document?.source !== 'listing-inquiry',
         }),
         defineField({
             name: 'fullName',
@@ -56,16 +68,19 @@ export default defineType({
             name: 'beds',
             title: 'Beds',
             type: 'number',
+            hidden: ({ document }) => document?.source === 'listing-inquiry',
         }),
         defineField({
             name: 'baths',
             title: 'Baths',
             type: 'number',
+            hidden: ({ document }) => document?.source === 'listing-inquiry',
         }),
         defineField({
             name: 'sqft',
             title: 'Sqft',
             type: 'number',
+            hidden: ({ document }) => document?.source === 'listing-inquiry',
         }),
         defineField({
             name: 'timeframe',
@@ -99,14 +114,15 @@ export default defineType({
     ],
     preview: {
         select: {
-            title: 'email',
-            subtitle: 'address',
+            title: 'fullName',
+            subtitle: 'email',
             date: 'createdAt',
+            source: 'source',
         },
-        prepare({ title, subtitle, date }) {
+        prepare({ title, subtitle, date, source }) {
             return {
-                title: title || 'No Email',
-                subtitle: `${new Date(date).toLocaleDateString()} - ${subtitle || 'No Address'}`,
+                title: title || 'No Name',
+                subtitle: `${new Date(date).toLocaleDateString()} - ${source} - ${subtitle || 'No Email'}`,
             }
         },
     },

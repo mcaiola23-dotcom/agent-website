@@ -1,8 +1,8 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMapEvents, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import type { Listing, ListingBounds } from "../lib/data/providers/listings.types";
 import { formatListingPrice } from "../lib/data/providers/listings.provider";
 
@@ -58,6 +58,106 @@ function MapEvents({
   return null;
 }
 
+function ListingMarker({
+  listing,
+  position,
+  icon,
+  onSelect,
+}: {
+  listing: Listing;
+  position: [number, number];
+  icon: L.DivIcon;
+  onSelect: (listing: Listing) => void;
+}) {
+  const map = useMap();
+  const [direction, setDirection] = useState<"top" | "bottom" | "center" | "auto">("top");
+
+  // Check position relative to map bounds to avoid clipping
+  const checkPosition = () => {
+    if (!map) return;
+    const point = map.latLngToContainerPoint(position);
+    // If we are in the top 150px of the map, flip tooltip to bottom
+    const newDirection = point.y < 150 ? "bottom" : "top";
+    if (newDirection !== direction) {
+      setDirection(newDirection);
+    }
+  };
+
+  useMapEvents({
+    move: checkPosition,
+    zoom: checkPosition,
+    viewreset: checkPosition,
+  });
+
+  // Check for touch device to disable tooltip
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    // Basic check for touch capability or lack of hover
+    const mediaQuery = window.matchMedia('(hover: none)');
+    setIsTouch(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsTouch(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  return (
+    <Marker
+      position={position}
+      icon={icon}
+      eventHandlers={{
+        click: () => onSelect(listing),
+        mouseover: checkPosition,
+      }}
+    >
+      {!isTouch && (
+        <Tooltip
+          key={direction} // Force remount when direction changes
+          direction={direction}
+          offset={[0, direction === 'top' ? -10 : 10]}
+          opacity={1}
+          className="!bg-transparent !border-0 !shadow-none !p-0"
+        >
+          <div className="w-64 bg-stone-900 rounded-lg overflow-hidden border border-stone-700 shadow-2xl">
+            {/* Image */}
+            <div
+              className="h-32 w-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${listing.photos[0] || "/placeholder.jpg"})`,
+              }}
+            />
+
+            {/* Content */}
+            <div className="p-3">
+              <div className="text-lg font-serif text-white mb-0.5">
+                {formatListingPrice(listing.price)}
+              </div>
+              <div className="text-xs text-stone-300 truncate font-medium mb-2">
+                {listing.address.street}, {listing.address.city}
+              </div>
+
+              <div className="flex items-center gap-3 text-xs text-stone-400 border-t border-stone-800 pt-2">
+                <div className="flex items-center gap-1">
+                  <span className="text-white font-medium">{listing.beds}</span> bd
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-white font-medium">{listing.baths}</span> ba
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-white font-medium">
+                    {listing.sqft.toLocaleString()}
+                  </span>{" "}
+                  sqft
+                </div>
+              </div>
+            </div>
+          </div>
+        </Tooltip>
+      )}
+    </Marker>
+  );
+}
+
 export default function HomeSearchMap({
   listings,
   center,
@@ -95,13 +195,12 @@ export default function HomeSearchMap({
       />
       <MapEvents onBoundsChange={onBoundsChange} />
       {markers.map((marker) => (
-        <Marker
+        <ListingMarker
           key={marker.id}
+          listing={marker.listing}
           position={marker.position}
           icon={marker.icon}
-          eventHandlers={{
-            click: () => onSelectListing(marker.listing),
-          }}
+          onSelect={onSelectListing}
         />
       ))}
     </MapContainer>

@@ -30,11 +30,14 @@ export async function POST(request: Request) {
             email: lead.email,
             phone: lead.phone,
             // Property details are optional now
-            address: lead.propertyDetails?.address,
+            address: lead.listingAddress || lead.propertyDetails?.address,
             propertyType: lead.propertyDetails?.propertyType,
             beds: lead.propertyDetails?.beds,
             baths: lead.propertyDetails?.baths,
             sqft: lead.propertyDetails?.sqft,
+
+            listingId: lead.listingId,
+            listingUrl: lead.listingUrl,
 
             timeframe: lead.timeframe,
             notes: lead.message, // Map message to notes
