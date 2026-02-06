@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import Header from "./components/Header";
 import GlobalFooter from "./components/GlobalFooter";
@@ -96,26 +97,58 @@ const jsonLd = {
   ],
 };
 
+/**
+ * Clerk appearance configuration for luxury brand consistency
+ * Uses stone color palette and Cormorant serif headings
+ */
+const clerkAppearance = {
+  variables: {
+    colorPrimary: '#1c1917', // stone-900
+    colorBackground: '#fafaf9', // stone-50
+    colorText: '#1c1917', // stone-900
+    colorTextSecondary: '#57534e', // stone-600
+    colorInputBackground: '#ffffff',
+    colorInputText: '#1c1917',
+    borderRadius: '0.375rem',
+    fontFamily: 'var(--font-inter), sans-serif',
+  },
+  elements: {
+    formButtonPrimary:
+      'bg-stone-900 hover:bg-stone-800 text-sm font-medium shadow-sm',
+    card: 'shadow-xl border border-stone-200',
+    headerTitle: 'font-serif text-2xl',
+    headerSubtitle: 'text-stone-600',
+    socialButtonsBlockButton:
+      'border border-stone-300 hover:bg-stone-50',
+    formFieldInput:
+      'border-stone-300 focus:border-stone-500 focus:ring-stone-500',
+    footerActionLink: 'text-stone-900 hover:text-stone-700',
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${cormorant.variable} ${inter.variable} font-sans antialiased min-h-screen flex flex-col bg-slate-50 text-slate-900`}
-      >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <GlobalFooter />
-      </body>
-    </html>
+    <ClerkProvider appearance={clerkAppearance}>
+      <html lang="en">
+        <body
+          className={`${cormorant.variable} ${inter.variable} font-sans antialiased min-h-screen flex flex-col bg-slate-50 text-slate-900`}
+        >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <GlobalFooter />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
+

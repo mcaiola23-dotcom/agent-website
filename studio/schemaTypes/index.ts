@@ -6,6 +6,7 @@ import testimonial from './testimonial'
 import videoScript from './videoScript'
 import lead from './lead'
 import dataCacheEntry from './dataCacheEntry'
+import userProfile from './userProfile'
 
 export const schemaTypes = [
     town,
@@ -16,4 +17,6 @@ export const schemaTypes = [
     videoScript,
     lead,
     dataCacheEntry,
+    userProfile,
 ]
+

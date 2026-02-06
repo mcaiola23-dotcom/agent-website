@@ -238,8 +238,9 @@ export default function HomeSearchClient() {
 
   // Compute displayed listings (search results vs saved)
   const savedListings = useMemo(() => {
+    const allListings = mockListings.listings as unknown as Listing[];
     return savedIds
-      .map((id) => mockListings.listings.find((l) => l.id === id))
+      .map((id) => allListings.find((l) => l.id === id))
       .filter((l): l is Listing => l !== undefined);
   }, [savedIds]);
 

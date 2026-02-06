@@ -70,29 +70,76 @@ function ListingMarker({
   onSelect: (listing: Listing) => void;
 }) {
   const map = useMap();
-  const [direction, setDirection] = useState<"top" | "bottom" | "center" | "auto">("top");
+  const [direction, setDirection] = useState<"top" | "bottom" | "left" | "right">("top");
+  const [offset, setOffset] = useState<[number, number]>([0, -15]);
 
-  // Check position relative to map bounds to avoid clipping
-  const checkPosition = () => {
+  // Smart direction calculation based on position within map container
+  const calculateDirection = () => {
     if (!map) return;
+
+    const containerSize = map.getSize();
     const point = map.latLngToContainerPoint(position);
-    // If we are in the top 150px of the map, flip tooltip to bottom
-    const newDirection = point.y < 150 ? "bottom" : "top";
+
+    // Card dimensions (approximate: w-64 = 256px, total height ~200px)
+    const cardWidth = 256;
+    const cardHeight = 200;
+
+    // Calculate available space in each direction
+    const spaceTop = point.y;
+    const spaceBottom = containerSize.y - point.y;
+    const spaceLeft = point.x;
+    const spaceRight = containerSize.x - point.x;
+
+    // Determine best direction based on available space
+    // Priority: top > bottom > right > left
+    let newDirection: "top" | "bottom" | "left" | "right" = "top";
+    let newOffset: [number, number] = [0, -15];
+
+    if (spaceTop >= cardHeight + 20) {
+      // Enough space above
+      newDirection = "top";
+      newOffset = [0, -15];
+    } else if (spaceBottom >= cardHeight + 20) {
+      // Enough space below
+      newDirection = "bottom";
+      newOffset = [0, 15];
+    } else if (spaceRight >= cardWidth + 20) {
+      // Try right side
+      newDirection = "right";
+      newOffset = [15, 0];
+    } else if (spaceLeft >= cardWidth + 20) {
+      // Try left side
+      newDirection = "left";
+      newOffset = [-15, 0];
+    } else {
+      // Default to bottom if nothing fits well (least likely to overlap with navigation)
+      newDirection = "bottom";
+      newOffset = [0, 15];
+    }
+
     if (newDirection !== direction) {
       setDirection(newDirection);
+      setOffset(newOffset);
     }
   };
 
+  // Calculate direction on mount and whenever map changes
+  useEffect(() => {
+    calculateDirection();
+  }, [map, position]);
+
+  // Also recalculate on map events
   useMapEvents({
-    move: checkPosition,
-    zoom: checkPosition,
-    viewreset: checkPosition,
+    move: calculateDirection,
+    moveend: calculateDirection,
+    zoom: calculateDirection,
+    zoomend: calculateDirection,
+    viewreset: calculateDirection,
   });
 
   // Check for touch device to disable tooltip
   const [isTouch, setIsTouch] = useState(false);
   useEffect(() => {
-    // Basic check for touch capability or lack of hover
     const mediaQuery = window.matchMedia('(hover: none)');
     setIsTouch(mediaQuery.matches);
 
@@ -107,14 +154,14 @@ function ListingMarker({
       icon={icon}
       eventHandlers={{
         click: () => onSelect(listing),
-        mouseover: checkPosition,
+        mouseover: calculateDirection,
       }}
     >
       {!isTouch && (
         <Tooltip
-          key={direction} // Force remount when direction changes
+          key={`${direction}-${offset[0]}-${offset[1]}`}
           direction={direction}
-          offset={[0, direction === 'top' ? -10 : 10]}
+          offset={offset}
           opacity={1}
           className="!bg-transparent !border-0 !shadow-none !p-0"
         >

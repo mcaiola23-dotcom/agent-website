@@ -1,11 +1,15 @@
 /**
  * Favorites Hook
  * 
- * Client-side hook for managing saved/favorite listings using localStorage.
- * This provides a local-first experience without requiring authentication.
+ * Client-side hook for managing saved/favorite listings.
+ * - Logged out: Uses localStorage (local-first experience)
+ * - Logged in: Syncs with Sanity via API (cloud storage)
+ * 
+ * On login, localStorage favorites are merged with cloud data.
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useAuth } from '@clerk/nextjs';
 
 const FAVORITES_STORAGE_KEY = 'mattcaiola_saved_listings';
 
@@ -16,6 +20,8 @@ export interface UseFavoritesReturn {
     addFavorite: (listingId: string) => void;
     removeFavorite: (listingId: string) => void;
     clearFavorites: () => void;
+    isSyncing: boolean;
+    isLoaded: boolean;
 }
 
 function getFavoritesFromStorage(): string[] {
@@ -44,22 +50,72 @@ function saveFavoritesToStorage(favorites: string[]): void {
 }
 
 export function useFavorites(): UseFavoritesReturn {
+    const { isSignedIn, isLoaded: authLoaded } = useAuth();
     const [favorites, setFavorites] = useState<string[]>([]);
-    const [isInitialized, setIsInitialized] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const hasInitialSynced = useRef(false);
 
-    // Load favorites from localStorage on mount
+    // Load favorites on mount (from localStorage initially)
     useEffect(() => {
         const stored = getFavoritesFromStorage();
         setFavorites(stored);
-        setIsInitialized(true);
+        setIsLoaded(true);
     }, []);
 
-    // Save to localStorage whenever favorites change (after initialization)
+    // Sync with cloud when user signs in
     useEffect(() => {
-        if (isInitialized) {
-            saveFavoritesToStorage(favorites);
+        if (!authLoaded || !isLoaded) return;
+
+        if (isSignedIn && !hasInitialSynced.current) {
+            hasInitialSynced.current = true;
+            syncWithCloud();
+        } else if (!isSignedIn) {
+            // User signed out - reset sync flag
+            hasInitialSynced.current = false;
         }
-    }, [favorites, isInitialized]);
+    }, [isSignedIn, authLoaded, isLoaded]);
+
+    // Sync localStorage favorites with cloud storage
+    const syncWithCloud = async () => {
+        setIsSyncing(true);
+        try {
+            const localFavorites = getFavoritesFromStorage();
+
+            const response = await fetch('/api/user/sync', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ savedHomes: localFavorites }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const cloudFavorites = data.profile?.savedHomes || [];
+                setFavorites(cloudFavorites);
+                // Update localStorage with merged cloud data
+                saveFavoritesToStorage(cloudFavorites);
+            }
+        } catch (error) {
+            console.error('Failed to sync favorites:', error);
+        } finally {
+            setIsSyncing(false);
+        }
+    };
+
+    // Update cloud when favorites change (if signed in)
+    const updateCloud = useCallback(async (listingId: string, action: 'add' | 'remove') => {
+        if (!isSignedIn) return;
+
+        try {
+            await fetch('/api/user/sync', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ listingId, action }),
+            });
+        } catch (error) {
+            console.error('Failed to update cloud:', error);
+        }
+    }, [isSignedIn]);
 
     const isFavorite = useCallback(
         (listingId: string) => favorites.includes(listingId),
@@ -69,25 +125,41 @@ export function useFavorites(): UseFavoritesReturn {
     const addFavorite = useCallback((listingId: string) => {
         setFavorites((prev) => {
             if (prev.includes(listingId)) return prev;
-            return [...prev, listingId];
+            const updated = [...prev, listingId];
+            saveFavoritesToStorage(updated);
+            return updated;
         });
-    }, []);
+        updateCloud(listingId, 'add');
+    }, [updateCloud]);
 
     const removeFavorite = useCallback((listingId: string) => {
-        setFavorites((prev) => prev.filter((id) => id !== listingId));
-    }, []);
+        setFavorites((prev) => {
+            const updated = prev.filter((id) => id !== listingId);
+            saveFavoritesToStorage(updated);
+            return updated;
+        });
+        updateCloud(listingId, 'remove');
+    }, [updateCloud]);
 
     const toggleFavorite = useCallback((listingId: string) => {
         setFavorites((prev) => {
-            if (prev.includes(listingId)) {
-                return prev.filter((id) => id !== listingId);
-            }
-            return [...prev, listingId];
+            const isCurrentlyFavorite = prev.includes(listingId);
+            const updated = isCurrentlyFavorite
+                ? prev.filter((id) => id !== listingId)
+                : [...prev, listingId];
+            saveFavoritesToStorage(updated);
+
+            // Update cloud
+            updateCloud(listingId, isCurrentlyFavorite ? 'remove' : 'add');
+
+            return updated;
         });
-    }, []);
+    }, [updateCloud]);
 
     const clearFavorites = useCallback(() => {
         setFavorites([]);
+        saveFavoritesToStorage([]);
+        // Note: clearFavorites doesn't sync to cloud - intentional for now
     }, []);
 
     return {
@@ -97,5 +169,8 @@ export function useFavorites(): UseFavoritesReturn {
         addFavorite,
         removeFavorite,
         clearFavorites,
+        isSyncing,
+        isLoaded,
     };
 }
+
