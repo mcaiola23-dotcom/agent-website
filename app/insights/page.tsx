@@ -1,59 +1,120 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { getRecentPosts } from "../lib/sanity.queries";
+import Container from "../components/Container";
 
 export const metadata: Metadata = {
-  title: "Insights | Fairfield County Real Estate Market News & Tips",
-  description:
-    "Expert analysis, market updates, and community news for Fairfield County real estate. Stay informed about trends, tips, and local developments.",
+    title: "Insights | Fairfield County Real Estate Market News & Tips",
+    description:
+        "Expert analysis, market updates, and community news for Fairfield County real estate. Stay informed about trends, tips, and local developments.",
 };
 
 export const dynamic = "force-dynamic";
+
+// All available categories with display info
+const CATEGORIES = [
+    { slug: 'market-update', label: 'Market Update' },
+    { slug: 'community', label: 'Community' },
+    { slug: 'real-estate-tips', label: 'Real Estate Tips' },
+    { slug: 'news', label: 'News' },
+    { slug: 'investing', label: 'Investing' },
+    { slug: 'commercial', label: 'Commercial' },
+];
 
 export default async function InsightsPage() {
     const posts = await getRecentPosts();
 
     return (
-        <div className="container mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold mb-8 text-slate-900">Insights</h1>
-            <p className="text-lg text-slate-600 mb-12 max-w-2xl">
-                Expert analysis, market updates, and community news for Fairfield County real estate.
-            </p>
+        <div className="bg-white min-h-screen">
+            {/* Hero Section with Background Image */}
+            <section className="relative bg-stone-900 text-white overflow-hidden">
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-40"
+                    style={{ backgroundImage: "url('/visual/stock/home-office-desk.jpg')" }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-stone-900/80 to-stone-900/40" />
+                <Container className="relative z-10 py-20 md:py-28">
+                    <div className="max-w-3xl">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium mb-6">
+                            Insights
+                        </h1>
+                        <p className="text-lg text-stone-300 leading-relaxed">
+                            Expert analysis, market updates, and community news for Fairfield County
+                            real estate. Stay informed about trends, tips, and local developments.
+                        </p>
+                    </div>
+                </Container>
+            </section>
 
-            {/* Categories Links (Optional helper for user navigation) */}
-            <div className="flex gap-4 mb-12 flex-wrap">
-                {['market-update', 'community', 'real-estate-tips', 'news'].map((cat) => (
-                    <Link key={cat} href={`/insights/${cat}`} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-700 font-medium capitalize transition-colors">
-                        {cat.replace(/-/g, ' ')}
-                    </Link>
-                ))}
-            </div>
+            <Container className="py-16">
+                {/* Category Pills */}
+                <div className="flex gap-3 mb-12 flex-wrap">
+                    {CATEGORIES.map((cat) => (
+                        <Link
+                            key={cat.slug}
+                            href={`/insights/${cat.slug}`}
+                            className="px-5 py-2 bg-stone-100 hover:bg-stone-200 rounded-full text-stone-700 font-medium transition-colors"
+                        >
+                            {cat.label}
+                        </Link>
+                    ))}
+                </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {posts.map((post) => (
-                    <Link
-                        key={post._id}
-                        href={`/insights/${post.categorySlug}/${post.slug}`}
-                        className="group block border border-slate-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
-                    >
-                        <div className="p-6">
-                            <span className="inline-block px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold mb-4">
-                                {post.categoryLabel}
-                            </span>
-                            <h2 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
-                                {post.title}
-                            </h2>
-                            <p className="text-slate-500 text-sm">
-                                {new Date(post.publishedAt).toLocaleDateString()}
-                            </p>
-                        </div>
-                    </Link>
-                ))}
-            </div>
+                {/* Post Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {posts.map((post) => (
+                        <Link
+                            key={post._id}
+                            href={`/insights/${post.categorySlug}/${post.slug}`}
+                            className="group block bg-white rounded-xl overflow-hidden border border-stone-200 hover:border-stone-300 hover:shadow-xl transition-all duration-300"
+                        >
+                            {/* Featured Image */}
+                            <div className="relative aspect-[16/10] bg-stone-100 overflow-hidden">
+                                {post.featuredImageUrl ? (
+                                    <Image
+                                        src={post.featuredImageUrl}
+                                        alt={post.title}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center">
+                                        <svg className="w-12 h-12 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
 
-            {posts.length === 0 && (
-                <p className="text-slate-500">No recent posts found.</p>
-            )}
+                            {/* Content */}
+                            <div className="p-6">
+                                <span className="inline-block px-3 py-1 bg-stone-100 text-stone-700 rounded-full text-sm font-medium mb-4">
+                                    {post.categoryLabel}
+                                </span>
+                                <h2 className="text-xl font-serif font-medium text-stone-900 mb-3 group-hover:text-stone-700 transition-colors line-clamp-2">
+                                    {post.title}
+                                </h2>
+                                <p className="text-stone-500 text-sm">
+                                    {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })}
+                                </p>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+
+                {posts.length === 0 && (
+                    <div className="text-center py-16">
+                        <p className="text-stone-500 text-lg">No posts found.</p>
+                        <p className="text-stone-400 mt-2">Check back soon for new content!</p>
+                    </div>
+                )}
+            </Container>
         </div>
     );
 }

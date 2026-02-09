@@ -106,141 +106,74 @@ export default async function NeighborhoodPage({
         });
     }
 
-    // Fetch POIs data - combine neighborhood and town curated POIs
-    const combinedCuratedPois = [
-        ...(neighborhood.curatedPois || []),
-        ...(neighborhood.town?.curatedPois || []),
-    ];
-
-    let poisResult = null;
-    if (hasCenterCoords) {
-        poisResult = await getPois({
-            townSlug,
-            townId,
-            townName,
-            lat: center!.lat,
-            lng: center!.lng,
-            curatedPois: combinedCuratedPois,
-            neighborhoodSlug,
-            neighborhoodId: neighborhood._id,
-        });
-    } else if (combinedCuratedPois.length > 0) {
-        // Use curated POIs if no coordinates
-        poisResult = await getPois({
-            townSlug,
-            townId,
-            townName,
-            lat: 0,
-            lng: 0,
-            curatedPois: combinedCuratedPois,
-            neighborhoodSlug,
-            neighborhoodId: neighborhood._id,
-        });
-    }
-
     return (
         <div className="bg-white min-h-screen">
+            {/* N4: Hero uses TownHero with updated gradient overlay */}
+            {/* N2: Photos - uses townSlug as fallback for neighborhood images */}
             <TownHero
                 title={neighborhood.name}
                 subtitle={`A neighborhood in ${townName}`}
-                imageSlug={neighborhoodSlug} // Will look for /visual/towns/{neighborhoodSlug}.jpg
+                imageSlug={townSlug} // Use town image as fallback (neighborhoods share town images)
                 parentLink={{ href: `/towns/${townSlug}`, label: townName }}
             />
 
             <Container className="py-16">
-                {/* Overview */}
+                {/* Overview - Centered like Town pages */}
                 <section className="max-w-3xl mx-auto mb-16">
-                    <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">Overview</h2>
+                    <h2 className="text-3xl md:text-4xl font-serif font-medium text-stone-900 mb-6">
+                        Overview
+                    </h2>
                     {neighborhood.overview ? (
-                        <p className="text-lg text-slate-600 leading-relaxed font-light">
+                        <p className="text-lg text-stone-600 leading-relaxed">
                             {neighborhood.overview}
                         </p>
                     ) : (
-                        <p className="text-slate-500 italic">Overview coming soon.</p>
+                        <p className="text-stone-500 italic">Overview coming soon.</p>
                     )}
                 </section>
 
                 {/* Description */}
                 <section className="max-w-3xl mx-auto mb-16">
-                    <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                    <h2 className="text-3xl md:text-4xl font-serif font-medium text-stone-900 mb-6">
                         Living in {neighborhood.name}
                     </h2>
                     {hasDescription ? (
-                        <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                        <div className="prose prose-stone max-w-none text-stone-600 leading-relaxed">
                             <PortableText value={neighborhood.description as any} />
                         </div>
                     ) : (
-                        <p className="text-slate-500 italic">Description coming soon.</p>
+                        <p className="text-stone-500 italic">Description coming soon.</p>
                     )}
                 </section>
 
-                {/* Highlights Section */}
+                {/* Highlights Section - N3: Centering fixed, N5: Blue → Stone */}
                 {hasHighlights && (
-                    <section className="mb-16">
-                        <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                    <section className="max-w-3xl mx-auto mb-16">
+                        <h2 className="text-3xl md:text-4xl font-serif font-medium text-stone-900 mb-6">
                             What Makes {neighborhood.name} Special
                         </h2>
                         <ul className="space-y-3">
                             {neighborhood.highlights!.map((highlight, index) => (
                                 <li key={index} className="flex items-start">
-                                    <span className="text-blue-600 mr-3 flex-shrink-0">•</span>
-                                    <span className="text-slate-600">{highlight}</span>
+                                    <span className="text-stone-400 mr-3 flex-shrink-0">•</span>
+                                    <span className="text-stone-600">{highlight}</span>
                                 </li>
                             ))}
                         </ul>
                     </section>
                 )}
 
-                {/* Demographics Section */}
-                <section className="mb-16">
-                    <AtAGlanceModule
-                        townSlug={townSlug}
-                        townName={townName}
-                        isNeighborhoodContext={true}
-                    />
-                </section>
-
-                {/* Nearby Schools Section */}
-                <section className="mb-16">
-                    <SchoolsModule
-                        townSlug={townSlug}
-                        townName={townName}
-                        neighborhoodCenter={hasCenterCoords ? center : undefined}
-                        isNeighborhoodContext={true}
-                    />
-                </section>
-
-                {/* Property Taxes Section */}
-                <section className="mb-16">
-                    <div className="max-w-2xl">
-                        <TaxesModule
-                            townSlug={townSlug}
-                            townName={townName}
-                            isNeighborhoodContext={true}
-                        />
-                    </div>
-                </section>
-
-                {/* Walk Score & POIs Section */}
-                <section className="mb-16">
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {/* Walk Score */}
-                        {walkScoreResult ? (
+                {/* Walk Score Section */}
+                {walkScoreResult && (
+                    <section className="max-w-3xl mx-auto mb-16">
+                        <h2 className="text-3xl md:text-4xl font-serif font-medium text-stone-900 mb-6">
+                            Walkability & Transit
+                        </h2>
+                        <div className="max-w-xl">
                             <WalkScoreModule result={walkScoreResult} locationName={neighborhood.name} />
-                        ) : (
-                            <WalkScoreModulePlaceholder />
-                        )}
-
-                        {/* POIs */}
-                        {poisResult && poisResult.pois.length > 0 ? (
-                            <PoisModule result={poisResult} locationName={neighborhood.name} />
-                        ) : (
-                            <PoisModulePlaceholder locationName={neighborhood.name} />
-                        )}
-                    </div>
-                </section>
-
-
+                        </div>
+                    </section>
+                )}
 
                 {/* Listings Section */}
                 <section>

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getPostByCategoryLabelAndSlug } from "../../../lib/sanity.queries";
 import RichText from "../../../components/RichText";
 import Link from "next/link";
+import Image from "next/image";
+import Container from "../../../components/Container";
 
 export const dynamic = "force-dynamic";
 
@@ -36,11 +38,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             type: "article",
             publishedTime: post.publishedAt,
             authors: post.author ? [post.author] : undefined,
+            images: post.featuredImageUrl ? [{ url: post.featuredImageUrl }] : undefined,
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
+            images: post.featuredImageUrl ? [post.featuredImageUrl] : undefined,
         },
     };
 }
@@ -62,11 +66,12 @@ export default async function InsightsPostPage(props: Props) {
         headline: post.title,
         datePublished: post.publishedAt,
         dateModified: post.publishedAt,
+        image: post.featuredImageUrl,
         author: post.author
             ? {
-                  "@type": "Person",
-                  name: post.author,
-              }
+                "@type": "Person",
+                name: post.author,
+            }
             : undefined,
         publisher: {
             "@type": "RealEstateAgent",
@@ -86,36 +91,66 @@ export default async function InsightsPostPage(props: Props) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <article className="container mx-auto px-4 py-12 max-w-4xl">
-            <div className="mb-8">
-                <Link href={`/insights/${categorySlug}`} className="text-blue-600 hover:underline mb-4 inline-block capitalize">
-                    &larr; Back to {post.categoryLabel}
-                </Link>
 
-                <header className="mb-8">
-                    <div className="flex items-center gap-4 mb-4">
-                        <span className="inline-block px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold">
-                            {post.categoryLabel}
-                        </span>
-                        <time className="text-slate-500 text-sm">{new Date(post.publishedAt).toLocaleDateString()}</time>
+            {/* Hero Image Header */}
+            {post.featuredImageUrl && (
+                <div className="relative h-[400px] md:h-[500px] bg-stone-900">
+                    <Image
+                        src={post.featuredImageUrl}
+                        alt={post.title}
+                        fill
+                        priority
+                        className="object-cover opacity-70"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/50 to-transparent" />
+                </div>
+            )}
+
+            <Container className="py-12">
+                <article className="max-w-3xl mx-auto">
+                    {/* Back Link */}
+                    <Link
+                        href={`/insights/${categorySlug}`}
+                        className="inline-flex items-center gap-2 text-stone-600 hover:text-stone-900 mb-8 transition-colors"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Back to {post.categoryLabel}
+                    </Link>
+
+                    {/* Article Header */}
+                    <header className="mb-12">
+                        <div className="flex items-center gap-4 mb-6">
+                            <span className="inline-block px-3 py-1 bg-stone-100 text-stone-700 rounded-full text-sm font-medium">
+                                {post.categoryLabel}
+                            </span>
+                            <time className="text-stone-500 text-sm">
+                                {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                })}
+                            </time>
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-serif font-medium text-stone-900 leading-tight mb-4">
+                            {post.title}
+                        </h1>
+                        {post.author && (
+                            <p className="text-stone-600">By {post.author}</p>
+                        )}
+                    </header>
+
+                    {/* Article Body */}
+                    <div className="prose prose-stone prose-lg max-w-none">
+                        {post.body ? (
+                            <RichText value={post.body} />
+                        ) : (
+                            <p className="text-stone-500 italic">No content available for this post.</p>
+                        )}
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
-                        {post.title}
-                    </h1>
-                    {post.author && (
-                        <p className="text-slate-600 mt-4">By {post.author}</p>
-                    )}
-                </header>
-            </div>
-
-            <div className="prose prose-slate max-w-none">
-                {post.body ? (
-                    <RichText value={post.body} />
-                ) : (
-                    <p className="text-slate-500 italic">No content available for this post.</p>
-                )}
-            </div>
-        </article>
+                </article>
+            </Container>
         </>
     );
 }

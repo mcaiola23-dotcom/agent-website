@@ -34,6 +34,15 @@ export default defineType({
             rows: 3,
         }),
         defineField({
+            name: 'heroImage',
+            title: 'Hero Image',
+            description: 'Main image for the town (used in cards and hero sections)',
+            type: 'image',
+            options: {
+                hotspot: true,
+            },
+        }),
+        defineField({
             name: 'overviewLong',
             title: 'Long Overview',
             type: 'array',

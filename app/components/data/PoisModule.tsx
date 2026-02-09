@@ -26,7 +26,7 @@ export function PoisModule({ result, locationName }: PoisModuleProps) {
     const [activeCategory, setActiveCategory] = useState<PoiCategory | 'all'>('all');
 
     const groupedPois = groupPoisByCategory(result.pois);
-    
+
     // Get categories that have POIs
     const availableCategories = (Object.keys(groupedPois) as PoiCategory[]).filter(
         (cat) => groupedPois[cat].length > 0
@@ -115,13 +115,13 @@ function CategoryTab({
             className={`
                 px-3 py-1.5 text-sm rounded-full transition-colors
                 ${isActive
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-stone-900 text-white'
                     : 'bg-stone-100 text-slate-600 hover:bg-stone-200'
                 }
             `}
         >
             {label}
-            <span className={`ml-1 ${isActive ? 'text-blue-200' : 'text-slate-400'}`}>
+            <span className={`ml-1 ${isActive ? 'text-stone-400' : 'text-slate-400'}`}>
                 ({count})
             </span>
         </button>
@@ -141,7 +141,7 @@ function PoiItem({ poi }: { poi: Poi }) {
                             href={poi.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-medium text-slate-900 hover:text-blue-600 truncate"
+                            className="font-medium text-slate-900 hover:text-stone-600 truncate"
                         >
                             {poi.name}
                         </a>

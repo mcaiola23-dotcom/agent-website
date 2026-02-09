@@ -73,33 +73,33 @@ export function AtAGlanceModule({
     return (
         <div className="rounded-lg overflow-hidden shadow-sm border border-stone-200">
             {/* Dark Header Section */}
-            <div className="bg-slate-900 text-white p-6 md:p-8">
-                <h2 className="text-2xl md:text-3xl font-serif italic mb-3">{title}</h2>
+            <div className="bg-stone-900 text-white p-6 md:p-8">
+                <h2 className="text-2xl md:text-3xl font-serif font-medium mb-3">{title}</h2>
                 <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-3xl">
                     {subtitle}
                 </p>
-                
+
                 {/* Key Stats Row */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-                    <HeaderStat 
+                    <HeaderStat
                         icon={<PopulationIcon />}
-                        value={formatNumber(data.population)} 
-                        label="TOTAL POPULATION" 
+                        value={formatNumber(data.population)}
+                        label="TOTAL POPULATION"
                     />
-                    <HeaderStat 
+                    <HeaderStat
                         icon={<AgeIcon />}
-                        value={`${data.medianAge} YEARS`} 
-                        label="MEDIAN AGE" 
+                        value={`${data.medianAge} YEARS`}
+                        label="MEDIAN AGE"
                     />
-                    <HeaderStat 
+                    <HeaderStat
                         icon={<DensityIcon />}
-                        value={data.densityLabel || 'N/A'} 
-                        label="POPULATION DENSITY" 
+                        value={data.densityLabel || 'N/A'}
+                        label="POPULATION DENSITY"
                     />
-                    <HeaderStat 
+                    <HeaderStat
                         icon={<IncomeIcon />}
-                        value={data.perCapitaIncome ? formatCurrency(data.perCapitaIncome) : 'N/A'} 
-                        label="AVG INDIVIDUAL INCOME" 
+                        value={data.perCapitaIncome ? formatCurrency(data.perCapitaIncome) : 'N/A'}
+                        label="AVG INDIVIDUAL INCOME"
                     />
                 </div>
             </div>
@@ -109,20 +109,20 @@ export function AtAGlanceModule({
                 {/* Tab Navigation */}
                 <div className="border-b border-stone-200 px-4 md:px-6">
                     <div className="flex gap-1">
-                        <TabButton 
-                            active={activeTab === 'population'} 
+                        <TabButton
+                            active={activeTab === 'population'}
                             onClick={() => setActiveTab('population')}
                         >
                             Population
                         </TabButton>
-                        <TabButton 
-                            active={activeTab === 'households'} 
+                        <TabButton
+                            active={activeTab === 'households'}
                             onClick={() => setActiveTab('households')}
                         >
                             Households
                         </TabButton>
-                        <TabButton 
-                            active={activeTab === 'education'} 
+                        <TabButton
+                            active={activeTab === 'education'}
                             onClick={() => setActiveTab('education')}
                         >
                             Education
@@ -162,11 +162,10 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
     return (
         <button
             onClick={onClick}
-            className={`px-4 py-3 text-sm font-medium transition-colors relative ${
-                active 
-                    ? 'text-slate-900' 
+            className={`px-4 py-3 text-sm font-medium transition-colors relative ${active
+                    ? 'text-slate-900'
                     : 'text-stone-500 hover:text-stone-700'
-            }`}
+                }`}
         >
             {children}
             {active && (
@@ -178,7 +177,7 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
 
 function PopulationTab({ data, townName }: { data: AtAGlanceData; townName: string }) {
     const ageGroups = data.ageGroups;
-    
+
     return (
         <div className="space-y-6">
             <p className="text-sm text-slate-600 leading-relaxed">
@@ -190,9 +189,9 @@ function PopulationTab({ data, townName }: { data: AtAGlanceData; townName: stri
                 <QuickStat value={formatNumber(data.population)} label="TOTAL POPULATION" />
                 <QuickStat value={data.densityLabel || 'N/A'} label="POPULATION DENSITY" />
                 <QuickStat value={data.medianAge.toString()} label="MEDIAN AGE" />
-                <QuickStat 
-                    value={`${data.malePercent?.toFixed(1) || '~49'} / ${data.femalePercent?.toFixed(1) || '~51'}%`} 
-                    label="MEN VS WOMEN" 
+                <QuickStat
+                    value={`${data.malePercent?.toFixed(1) || '~49'} / ${data.femalePercent?.toFixed(1) || '~51'}%`}
+                    label="MEN VS WOMEN"
                 />
             </div>
 
@@ -221,13 +220,13 @@ function PopulationTab({ data, townName }: { data: AtAGlanceData; townName: stri
                             Gender Distribution
                         </h4>
                         <div className="flex h-8 rounded-lg overflow-hidden">
-                            <div 
-                                className="bg-blue-500 flex items-center justify-center text-white text-xs font-medium"
+                            <div
+                                className="bg-stone-600 flex items-center justify-center text-white text-xs font-medium"
                                 style={{ width: `${data.malePercent}%` }}
                             >
                                 {data.malePercent.toFixed(1)}%
                             </div>
-                            <div 
+                            <div
                                 className="bg-pink-400 flex items-center justify-center text-white text-xs font-medium"
                                 style={{ width: `${data.femalePercent}%` }}
                             >
@@ -257,9 +256,9 @@ function HouseholdsTab({ data }: { data: AtAGlanceData }) {
                 <QuickStat value={formatNumber(data.totalHousingUnits || 0)} label="HOUSING UNITS" />
                 <QuickStat value={formatPercent(data.ownerOccupiedPercent)} label="OWNER-OCCUPIED" />
                 <QuickStat value={data.medianYearBuilt.toString()} label="MEDIAN YEAR BUILT" />
-                <QuickStat 
-                    value={data.medianHomeValue ? formatCurrency(data.medianHomeValue, data.homeValueNote) : 'N/A'} 
-                    label="MEDIAN HOME VALUE" 
+                <QuickStat
+                    value={data.medianHomeValue ? formatCurrency(data.medianHomeValue, data.homeValueNote) : 'N/A'}
+                    label="MEDIAN HOME VALUE"
                 />
             </div>
 
@@ -297,13 +296,13 @@ function HouseholdsTab({ data }: { data: AtAGlanceData }) {
                     Housing Ownership
                 </h4>
                 <div className="flex h-8 rounded-lg overflow-hidden">
-                    <div 
+                    <div
                         className="bg-emerald-500 flex items-center justify-center text-white text-xs font-medium"
                         style={{ width: `${data.ownerOccupiedPercent}%` }}
                     >
                         {data.ownerOccupiedPercent.toFixed(1)}% Owner
                     </div>
-                    <div 
+                    <div
                         className="bg-amber-400 flex items-center justify-center text-white text-xs font-medium"
                         style={{ width: `${100 - data.ownerOccupiedPercent}%` }}
                     >
@@ -317,7 +316,7 @@ function HouseholdsTab({ data }: { data: AtAGlanceData }) {
 
 function EducationTab({ data }: { data: AtAGlanceData }) {
     const edu = data.education;
-    
+
     if (!edu) {
         return (
             <div className="py-8 text-center text-stone-500">
@@ -330,8 +329,8 @@ function EducationTab({ data }: { data: AtAGlanceData }) {
         { label: 'Less Than 9th Grade', value: edu.lessHighSchool, color: 'bg-slate-400' },
         { label: 'High School Degree', value: edu.highSchool, color: 'bg-slate-500' },
         { label: 'Some College / Associate', value: edu.someCollege, color: 'bg-slate-600' },
-        { label: "Bachelor's Degree", value: edu.bachelors, color: 'bg-blue-500' },
-        { label: 'Graduate Degree', value: edu.graduate, color: 'bg-blue-600' },
+        { label: "Bachelor's Degree", value: edu.bachelors, color: 'bg-stone-700' },
+        { label: 'Graduate Degree', value: edu.graduate, color: 'bg-stone-800' },
     ];
 
     // Calculate population counts
@@ -351,7 +350,7 @@ function EducationTab({ data }: { data: AtAGlanceData }) {
                 </h4>
                 <div className="flex h-8 rounded-lg overflow-hidden">
                     {eduData.map((item, i) => (
-                        <div 
+                        <div
                             key={i}
                             className={`${item.color} flex items-center justify-center text-white text-xs font-medium`}
                             style={{ width: `${item.value}%` }}
@@ -382,8 +381,8 @@ function EducationTab({ data }: { data: AtAGlanceData }) {
             </div>
 
             {/* Highlight */}
-            <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
-                <div className="text-sm text-blue-900">
+            <div className="bg-stone-100 rounded-lg p-4 border border-stone-200">
+                <div className="text-sm text-stone-800">
                     <strong>{(edu.bachelors + edu.graduate).toFixed(0)}%</strong> of residents hold a bachelor&apos;s degree or higher — well above the national average of 33%.
                 </div>
             </div>
@@ -405,7 +404,7 @@ function AgeBar({ label, value }: { label: string; value: number }) {
         <div className="flex items-center gap-3">
             <div className="flex-1">
                 <div className="h-6 bg-stone-100 rounded-full overflow-hidden">
-                    <div 
+                    <div
                         className="h-full bg-slate-700 rounded-full"
                         style={{ width: `${value * 2.5}%` }} // Scale for visibility
                     />

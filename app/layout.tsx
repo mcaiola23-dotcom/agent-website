@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import Header from "./components/Header";
 import GlobalFooter from "./components/GlobalFooter";
+import FloatingButtons from "./components/FloatingButtons";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -146,6 +147,7 @@ export default function RootLayout({
             {children}
           </main>
           <GlobalFooter />
+          <FloatingButtons />
         </body>
       </html>
     </ClerkProvider>

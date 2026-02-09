@@ -14,7 +14,7 @@ export default function HeroBackgroundCrossfade({
         "/visual/home/hero-2.jpg",
         "/visual/home/hero-3.jpg",
     ],
-    intervalMs = 5000,
+    intervalMs = 8000,
 }: HeroBackgroundCrossfadeProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loadedImages, setLoadedImages] = useState<boolean[]>(new Array(images.length).fill(false));

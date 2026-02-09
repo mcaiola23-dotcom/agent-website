@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
+import { useClerk, useUser } from "@clerk/nextjs";
 
 const STORAGE_KEY = "fairfield_saved_listings";
 
 export function useSavedListings() {
+    const { isSignedIn } = useUser();
+    const clerk = useClerk();
     const [savedIds, setSavedIds] = useState<string[]>([]);
     const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -32,6 +35,11 @@ export function useSavedListings() {
     }, [savedIds, hasLoaded]);
 
     const toggleSave = (id: string) => {
+        if (!isSignedIn) {
+            clerk.openSignIn();
+            return;
+        }
+
         setSavedIds((prev) => {
             if (prev.includes(id)) {
                 return prev.filter((savedId) => savedId !== id);

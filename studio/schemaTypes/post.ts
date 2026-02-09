@@ -29,9 +29,20 @@ export default defineType({
                 list: [
                     { title: 'Market Update', value: 'market-update' },
                     { title: 'Community', value: 'community' },
-                    { title: 'Real Estate Tips', value: 'tips' },
+                    { title: 'Real Estate Tips', value: 'real-estate-tips' },
                     { title: 'News', value: 'news' },
+                    { title: 'Investing', value: 'investing' },
+                    { title: 'Commercial', value: 'commercial' },
                 ],
+            },
+        }),
+        defineField({
+            name: 'featuredImage',
+            title: 'Featured Image',
+            type: 'image',
+            description: 'Main image displayed on cards and article headers',
+            options: {
+                hotspot: true,
             },
         }),
         defineField({

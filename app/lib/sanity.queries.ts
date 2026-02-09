@@ -32,6 +32,7 @@ export type Town = {
   highlights?: string[];
   center?: GeoPoint;
   curatedPois?: CuratedPoi[];
+  heroImageUrl?: string;
 };
 
 export async function getTownsForHomepage(limit: number = 9): Promise<Town[]> {
@@ -40,7 +41,8 @@ export async function getTownsForHomepage(limit: number = 9): Promise<Town[]> {
       _id,
       name,
       "slug": slug.current,
-      overviewShort
+      overviewShort,
+      "heroImageUrl": heroImage.asset->url
     }`,
     { limit }
   );
@@ -52,7 +54,8 @@ export async function getAllTowns(): Promise<Town[]> {
       _id,
       name,
       "slug": slug.current,
-      overviewShort
+      overviewShort,
+      "heroImageUrl": heroImage.asset->url
     }`
   );
 }
@@ -159,30 +162,39 @@ export type Post = {
   categoryLabel: string; // The UI label
   author?: string;
   body?: PortableTextBlock[];
+  featuredImageUrl?: string; // Featured image URL
 };
 
 // Map URL slug -> DB Value
 const CATEGORY_SLUG_TO_VALUE: Record<string, string> = {
   "market-update": "market-update",
   "community": "community",
-  "real-estate-tips": "tips",
+  "real-estate-tips": "real-estate-tips",
   "news": "news",
+  "investing": "investing",
+  "commercial": "commercial",
 };
 
 // Map DB Value -> URL Slug
 const CATEGORY_VALUE_TO_SLUG: Record<string, string> = {
   "market-update": "market-update",
   "community": "community",
-  "tips": "real-estate-tips",
+  "real-estate-tips": "real-estate-tips",
+  "tips": "real-estate-tips", // Legacy support
   "news": "news",
+  "investing": "investing",
+  "commercial": "commercial",
 };
 
 // Map DB Value -> UI Label
 const CATEGORY_VALUE_TO_LABEL: Record<string, string> = {
   "market-update": "Market Update",
   "community": "Community",
-  "tips": "Real Estate Tips",
+  "real-estate-tips": "Real Estate Tips",
+  "tips": "Real Estate Tips", // Legacy support
   "news": "News",
+  "investing": "Investing",
+  "commercial": "Commercial",
 };
 
 export function getCategoryValueFromSlug(slug: string): string | undefined {
@@ -205,7 +217,8 @@ export async function getRecentPosts(limit: number = 100): Promise<Post[]> {
       "slug": slug.current,
       publishedAt,
       category,
-      author
+      author,
+      "featuredImageUrl": featuredImage.asset->url
     }`,
     { limit }
   );
@@ -231,7 +244,8 @@ export async function getPostsByCategoryLabel(categorySlug: string): Promise<Pos
             "slug": slug.current,
             publishedAt,
             category,
-            author
+            author,
+            "featuredImageUrl": featuredImage.asset->url
         }`,
     { categoryValue }
   );
@@ -258,7 +272,8 @@ export async function getPostByCategoryLabelAndSlug(categorySlug: string, postSl
             publishedAt,
             category,
             author,
-            body
+            body,
+            "featuredImageUrl": featuredImage.asset->url
         }`,
     { postSlug, categoryValue }
   );

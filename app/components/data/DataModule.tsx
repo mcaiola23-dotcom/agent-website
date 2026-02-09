@@ -98,7 +98,7 @@ export function DataModule({
                                 href={sourceUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline"
+                                className="text-stone-700 hover:underline"
                             >
                                 {source}
                             </a>

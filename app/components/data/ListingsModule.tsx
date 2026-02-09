@@ -71,8 +71,15 @@ export function ListingsModule({
     // Saved Listings Hook
     const { isSaved, toggleSave } = useSavedListings();
 
+    // Client-side mount guard to prevent Leaflet hydration errors
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     const scope = neighborhoodSlug ? 'neighborhood' : 'town';
-    const locationName = neighborhoodName || townName;
+    // For neighborhoods, show "Neighborhood, Town" format; for towns just show town name
+    const locationName = neighborhoodName ? `${neighborhoodName}, ${townName}` : townName;
 
     // Construct "View Full Search" URL
     const fullSearchQuery = new URLSearchParams();
@@ -128,20 +135,20 @@ export function ListingsModule({
     };
 
     return (
-        <div className="bg-stone-900 rounded-2xl overflow-hidden shadow-2xl border border-stone-800">
-            {/* Header */}
-            <div className="p-6 border-b border-stone-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            {/* Section Header - Outside container */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-white font-serif">
+                    <h2 className="text-3xl md:text-4xl font-serif font-medium text-stone-900">
                         Homes for Sale in {locationName}
                     </h2>
-                    <p className="text-stone-400 text-sm mt-1">
-                        {total} {total === 1 ? 'listing' : 'listings'} found
+                    <p className="text-stone-500 mt-2">
+                        {total} {total === 1 ? 'listing' : 'listings'} available
                     </p>
                 </div>
                 <Link
                     href={fullSearchUrl}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 hover:bg-stone-800 text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -150,99 +157,101 @@ export function ListingsModule({
                 </Link>
             </div>
 
-            {/* Map Embed Section */}
-            <div className="h-[400px] w-full relative z-0 border-b border-stone-800">
-                {/* 
-                    If we have a center, we show the map. 
-                    If we don't (rare), we could hide it, but HomeSearchMap defaults to a center.
-                    We'll pass a default center if prop is missing.
-                 */}
-                <HomeSearchMap
-                    listings={listings}
-                    center={center ? [center.lat, center.lng] : [41.1307, -73.4975]}
-                    onBoundsChange={() => { }} // No-op for embed view; we don't re-search on drag
-                    onSelectListing={handleSelectListing}
-                />
-                {/* Overlay to encourage clicking 'View Full Search' if map interaction is limited? 
-                     For now, map is fully interactive.
-                 */}
-            </div>
+            {/* Map + Listings Container */}
+            <div className="bg-stone-900 rounded-2xl overflow-hidden shadow-2xl border border-stone-800">
 
-            {/* Controls */}
-            <div className="bg-stone-900 p-4 border-b border-stone-800">
-                <div className="flex flex-wrap items-center gap-3">
-                    <button
-                        onClick={() => setShowFilters(!showFilters)}
-                        className="px-4 py-2 bg-stone-800 text-white rounded-lg text-sm border border-stone-700 hover:bg-stone-700 transition-colors"
-                    >
-                        {showFilters ? 'Hide Filters' : 'Filters'}
-                    </button>
-
-                    <SortDropdown value={sort} onChange={handleSortChange} />
-
-                    <StatusTabs
-                        value={filters.status || ['active', 'pending']}
-                        onChange={(status) => handleFilterChange({ status })}
-                    />
+                {/* Map Embed Section */}
+                <div className="h-[400px] w-full relative z-0 border-b border-stone-800">
+                    {isMounted ? (
+                        <HomeSearchMap
+                            listings={listings}
+                            center={center ? [center.lat, center.lng] : [41.1307, -73.4975]}
+                            onBoundsChange={() => { }} // No-op for embed view; we don't re-search on drag
+                            onSelectListing={handleSelectListing}
+                        />
+                    ) : (
+                        <div className="h-full w-full bg-stone-800 animate-pulse flex items-center justify-center">
+                            <span className="text-stone-500">Loading map...</span>
+                        </div>
+                    )}
                 </div>
 
-                {/* Expanded Filters */}
-                {showFilters && (
-                    <FiltersPanel
-                        filters={filters}
-                        onChange={handleFilterChange}
-                        onReset={handleResetFilters}
+                {/* Controls */}
+                <div className="bg-stone-900 p-4 border-b border-stone-800">
+                    <div className="flex flex-wrap items-center gap-3">
+                        <button
+                            onClick={() => setShowFilters(!showFilters)}
+                            className="px-4 py-2 bg-stone-800 text-white rounded-lg text-sm border border-stone-700 hover:bg-stone-700 transition-colors"
+                        >
+                            {showFilters ? 'Hide Filters' : 'Filters'}
+                        </button>
+
+                        <SortDropdown value={sort} onChange={handleSortChange} />
+
+                        <StatusTabs
+                            value={filters.status || ['active', 'pending']}
+                            onChange={(status) => handleFilterChange({ status })}
+                        />
+                    </div>
+
+                    {/* Expanded Filters */}
+                    {showFilters && (
+                        <FiltersPanel
+                            filters={filters}
+                            onChange={handleFilterChange}
+                            onReset={handleResetFilters}
+                        />
+                    )}
+                </div>
+
+                {/* Listings Grid */}
+                <div className="p-6 bg-stone-900 min-h-[400px]">
+                    {loading ? (
+                        <LoadingState />
+                    ) : listings.length === 0 ? (
+                        <EmptyState onReset={handleResetFilters} />
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {listings.map((listing) => (
+                                    <ListingCard
+                                        key={listing.id}
+                                        listing={listing}
+                                        onClick={() => handleSelectListing(listing)}
+                                    />
+                                ))}
+                            </div>
+
+                            {/* Pagination */}
+                            {totalPages > 1 && (
+                                <Pagination
+                                    page={page}
+                                    totalPages={totalPages}
+                                    onPageChange={setPage}
+                                />
+                            )}
+                        </>
+                    )}
+                </div>
+
+                <div className="px-6 py-6 bg-stone-900 border-t border-stone-800">
+                    <p className="text-xs text-stone-500">
+                        * Sample listings for demonstration. Real listings coming soon via MLS integration.
+                    </p>
+                </div>
+
+                {/* Listing Modal */}
+                {selectedListing && (
+                    <ListingModal
+                        listing={selectedListing}
+                        photoIndex={selectedPhotoIndex}
+                        onPhotoChange={setSelectedPhotoIndex}
+                        onClose={() => setSelectedListing(null)}
+                        isFavorite={isSaved(selectedListing.id)}
+                        onToggleFavorite={() => toggleSave(selectedListing.id)}
                     />
                 )}
             </div>
-
-            {/* Listings Grid */}
-            <div className="p-6 bg-stone-900 min-h-[400px]">
-                {loading ? (
-                    <LoadingState />
-                ) : listings.length === 0 ? (
-                    <EmptyState onReset={handleResetFilters} />
-                ) : (
-                    <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {listings.map((listing) => (
-                                <ListingCard
-                                    key={listing.id}
-                                    listing={listing}
-                                    onClick={() => handleSelectListing(listing)}
-                                />
-                            ))}
-                        </div>
-
-                        {/* Pagination */}
-                        {totalPages > 1 && (
-                            <Pagination
-                                page={page}
-                                totalPages={totalPages}
-                                onPageChange={setPage}
-                            />
-                        )}
-                    </>
-                )}
-            </div>
-
-            <div className="px-6 py-6 bg-stone-900 border-t border-stone-800">
-                <p className="text-xs text-stone-500">
-                    * Sample listings for demonstration. Real listings coming soon via MLS integration.
-                </p>
-            </div>
-
-            {/* Listing Modal */}
-            {selectedListing && (
-                <ListingModal
-                    listing={selectedListing}
-                    photoIndex={selectedPhotoIndex}
-                    onPhotoChange={setSelectedPhotoIndex}
-                    onClose={() => setSelectedListing(null)}
-                    isFavorite={isSaved(selectedListing.id)}
-                    onToggleFavorite={() => toggleSave(selectedListing.id)}
-                />
-            )}
         </div>
     );
 }
@@ -278,7 +287,7 @@ function StatusTabs({
                     key={status}
                     onClick={() => toggleStatus(status)}
                     className={`px-3 py-1.5 text-sm transition-colors ${value.includes(status)
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-white text-stone-900'
                         : 'bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700'
                         }`}
                 >
@@ -314,7 +323,7 @@ function SortDropdown({
                 const [field, order] = e.target.value.split('-') as [typeof value.field, typeof value.order];
                 onChange({ field, order });
             }}
-            className="px-3 py-2 bg-stone-800 text-white rounded-lg text-sm border border-stone-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 bg-stone-800 text-white rounded-lg text-sm border border-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-500"
         >
             {options.map((opt) => (
                 <option key={`${opt.field}-${opt.order}`} value={`${opt.field}-${opt.order}`}>
@@ -417,7 +426,7 @@ function FiltersPanel({
                                 onChange({ propertyTypes: updated });
                             }}
                             className={`px-3 py-1 rounded-full text-xs transition-colors ${(filters.propertyTypes || []).includes(type)
-                                ? 'bg-blue-600 text-white'
+                                ? 'bg-white text-stone-900'
                                 : 'bg-stone-700 text-stone-300 hover:bg-stone-600'
                                 }`}
                         >
@@ -431,7 +440,7 @@ function FiltersPanel({
             <div className="mt-4 flex justify-end">
                 <button
                     onClick={onReset}
-                    className="text-sm text-blue-400 hover:text-blue-300"
+                    className="text-sm text-stone-400 hover:text-white"
                 >
                     Reset Filters
                 </button>
@@ -597,7 +606,7 @@ function EmptyState({ onReset }: { onReset: () => void }) {
             </p>
             <button
                 onClick={onReset}
-                className="px-6 py-2.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm font-medium"
+                className="px-6 py-2.5 bg-white text-stone-900 rounded-full hover:bg-stone-100 transition-colors text-sm font-medium"
             >
                 Reset Filters
             </button>

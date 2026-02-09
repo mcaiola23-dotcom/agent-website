@@ -58,7 +58,7 @@ export function TaxesModule({
     if (!result.data) {
         return (
             <div className="bg-white rounded-lg shadow-sm border border-stone-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Property Taxes</h3>
+                <h3 className="text-lg font-semibold text-stone-900 mb-2">Property Taxes</h3>
                 <p className="text-stone-500">Tax data not available</p>
             </div>
         );
@@ -74,23 +74,23 @@ export function TaxesModule({
         setHomeValue(num);
     };
 
-    const title = isNeighborhoodContext 
-        ? `Property Taxes in ${townName}` 
+    const title = isNeighborhoodContext
+        ? `Property Taxes in ${townName}`
         : `Property Taxes in ${townName}, CT`;
 
     return (
         <div className="rounded-lg overflow-hidden shadow-sm border border-stone-200 bg-white">
             {/* Header with Mill Rate */}
-            <div className="bg-emerald-800 text-white p-6">
-                <h2 className="text-2xl font-serif italic mb-1">{title}</h2>
-                <p className="text-emerald-200 text-sm">
+            <div className="bg-stone-900 text-white p-6">
+                <h2 className="text-2xl font-serif font-medium mb-1">{title}</h2>
+                <p className="text-stone-400 text-sm">
                     Current mill rate and tax calculator for {townName} properties.
                 </p>
-                
+
                 <div className="mt-6 flex items-end justify-between">
                     <div>
                         <div className="text-4xl font-bold">{data.millRate.toFixed(2)}</div>
-                        <div className="text-emerald-200 text-sm mt-1">
+                        <div className="text-stone-400 text-sm mt-1">
                             Mill Rate · FY {data.fiscalYear}
                         </div>
                     </div>
@@ -98,7 +98,7 @@ export function TaxesModule({
                         href={data.assessorUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-emerald-200 hover:text-white inline-flex items-center gap-1"
+                        className="text-sm text-stone-400 hover:text-white inline-flex items-center gap-1"
                     >
                         Town Assessor
                         <ExternalLinkIcon />
@@ -108,57 +108,57 @@ export function TaxesModule({
 
             {/* How it Works */}
             <div className="p-4 md:p-6 border-b border-stone-100">
-                <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-3">
+                <h3 className="text-sm font-semibold text-stone-700 uppercase tracking-wider mb-3">
                     How CT Property Tax Works
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                    Connecticut assesses property at <strong>{data.assessmentRatio}%</strong> of fair market value. 
+                <p className="text-sm text-stone-600 leading-relaxed">
+                    Connecticut assesses property at <strong>{data.assessmentRatio}%</strong> of fair market value.
                     Your annual property tax is calculated using the following formula:
                 </p>
-                <div className="mt-3 bg-stone-50 rounded-lg p-3 font-mono text-sm text-slate-700 text-center">
+                <div className="mt-3 bg-stone-50 rounded-lg p-3 font-mono text-sm text-stone-700 text-center">
                     (Market Value × 0.70 × {data.millRate}) ÷ 1,000 = <span className="font-bold">Annual Tax</span>
                 </div>
             </div>
 
             {/* Interactive Calculator */}
-            <div className="p-4 md:p-6 bg-blue-50">
+            <div className="p-4 md:p-6 bg-stone-50">
                 <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                    <div className="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-600">
                         <CalculatorIcon />
                     </div>
-                    <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
+                    <h3 className="text-sm font-semibold text-stone-700 uppercase tracking-wider">
                         Tax Calculator
                     </h3>
                 </div>
-                
+
                 <div className="grid md:grid-cols-2 gap-6">
                     {/* Input */}
                     <div>
-                        <label className="block text-sm text-slate-600 mb-2">
+                        <label className="block text-sm text-stone-600 mb-2">
                             Enter Home Value
                         </label>
                         <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 font-medium">$</span>
                             <input
                                 type="text"
                                 value={inputValue}
                                 onChange={handleInputChange}
-                                className="w-full pl-8 pr-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl font-semibold bg-white"
+                                className="w-full pl-8 pr-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-500 text-xl font-semibold bg-white"
                                 placeholder="Enter value"
                             />
                         </div>
-                        <p className="text-xs text-slate-500 mt-2">
+                        <p className="text-xs text-stone-500 mt-2">
                             Default: estimated median home value for {townName}
                         </p>
                     </div>
-                    
+
                     {/* Result */}
-                    <div className="bg-white rounded-lg p-4 border border-blue-200">
-                        <div className="text-sm text-slate-600 mb-1">Estimated Annual Property Tax</div>
-                        <div className="text-3xl font-bold text-blue-700">
+                    <div className="bg-white rounded-lg p-4 border border-stone-300">
+                        <div className="text-sm text-stone-600 mb-1">Estimated Annual Property Tax</div>
+                        <div className="text-3xl font-bold text-stone-900">
                             {formatTaxAmount(calculatedTax)}
                         </div>
-                        <div className="text-sm text-slate-500 mt-2">
+                        <div className="text-sm text-stone-500 mt-2">
                             {formatTaxAmount(calculatedTax / 12)}/month
                         </div>
                     </div>
@@ -166,12 +166,12 @@ export function TaxesModule({
             </div>
 
             {/* Footer */}
-            <div className="px-4 md:px-6 py-4 bg-stone-50 border-t border-stone-100">
-                <p className="text-xs text-slate-500">
-                    <strong>Disclaimer:</strong> Estimate only. Actual taxes depend on assessed value and any applicable exemptions. 
+            <div className="px-4 md:px-6 py-4 bg-stone-100 border-t border-stone-200">
+                <p className="text-xs text-stone-500">
+                    <strong>Disclaimer:</strong> Estimate only. Actual taxes depend on assessed value and any applicable exemptions.
                     Contact the town assessor for official calculations.
                 </p>
-                <p className="text-xs text-slate-400 mt-2">
+                <p className="text-xs text-stone-400 mt-2">
                     Source: {result.source} · {result.methodology}
                 </p>
             </div>

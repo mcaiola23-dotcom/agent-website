@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { getPostsByCategoryLabel, getCategoryLabelFromValue, getCategoryValueFromSlug } from "../../lib/sanity.queries";
+import Container from "../../components/Container";
 
 export const dynamic = "force-dynamic";
 
@@ -43,56 +45,87 @@ export default async function InsightsCategoryPage(props: Props) {
     const params = await props.params;
     const { categorySlug } = params;
 
-    // Use the mapping to check if this is a valid category URL
     const categoryValue = getCategoryValueFromSlug(categorySlug);
-
-    // If mapping fails, verify if it should just show empty or if it's truly unknown.
-    // Requirement says: "if slug is unknown OR list empty: render an empty state (DO NOT 404)"
-    // However, usually unknown slug implies 404, but the requirement is strict about "render an empty state" for "slug is unknown". 
-    // Let's infer that as "Show page with 0 posts" rather than a hard 404 error page, 
-    // but if the slug itself is gibberish, it's weird. 
-    // But I will follow "render an empty state".
-
     const posts = await getPostsByCategoryLabel(categorySlug);
-
-    // Get pretty label using the value we hopefully found, or fallback to slug
     const categoryLabel = categoryValue ? getCategoryLabelFromValue(categoryValue) : categorySlug.replace(/-/g, ' ');
 
     return (
-        <div className="container mx-auto px-4 py-12">
-            <div className="mb-8">
-                <Link href="/insights" className="text-blue-600 hover:underline mb-4 inline-block">&larr; All Insights</Link>
-                <h1 className="text-4xl font-bold text-slate-900 capitalize">{categoryLabel}</h1>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {posts.map((post) => (
+        <div className="bg-white min-h-screen">
+            {/* Hero Section */}
+            <section className="bg-stone-900 text-white">
+                <Container className="py-16 md:py-20">
                     <Link
-                        key={post._id}
-                        href={`/insights/${post.categorySlug}/${post.slug}`} // Ensure we use the canonical slug for the category
-                        className="group block border border-slate-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
+                        href="/insights"
+                        className="inline-flex items-center gap-2 text-stone-400 hover:text-white mb-6 transition-colors"
                     >
-                        <div className="p-6">
-                            <span className="inline-block px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold mb-4">
-                                {post.categoryLabel}
-                            </span>
-                            <h2 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
-                                {post.title}
-                            </h2>
-                            <p className="text-slate-500 text-sm">
-                                {new Date(post.publishedAt).toLocaleDateString()}
-                            </p>
-                        </div>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        All Insights
                     </Link>
-                ))}
-            </div>
+                    <h1 className="text-4xl md:text-5xl font-serif font-medium capitalize">
+                        {categoryLabel}
+                    </h1>
+                </Container>
+            </section>
 
-            {posts.length === 0 && (
-                <div className="text-slate-500 py-12 text-center bg-slate-50 rounded-xl">
-                    <p className="text-lg">No posts found in {categoryLabel}.</p>
-                    <Link href="/insights" className="text-blue-600 hover:underline mt-2 inline-block">Browse all insights</Link>
+            <Container className="py-16">
+                {/* Post Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {posts.map((post) => (
+                        <Link
+                            key={post._id}
+                            href={`/insights/${post.categorySlug}/${post.slug}`}
+                            className="group block bg-white rounded-xl overflow-hidden border border-stone-200 hover:border-stone-300 hover:shadow-xl transition-all duration-300"
+                        >
+                            {/* Featured Image */}
+                            <div className="relative aspect-[16/10] bg-stone-100 overflow-hidden">
+                                {post.featuredImageUrl ? (
+                                    <Image
+                                        src={post.featuredImageUrl}
+                                        alt={post.title}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center">
+                                        <svg className="w-12 h-12 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Content */}
+                            <div className="p-6">
+                                <span className="inline-block px-3 py-1 bg-stone-100 text-stone-700 rounded-full text-sm font-medium mb-4">
+                                    {post.categoryLabel}
+                                </span>
+                                <h2 className="text-xl font-serif font-medium text-stone-900 mb-3 group-hover:text-stone-700 transition-colors line-clamp-2">
+                                    {post.title}
+                                </h2>
+                                <p className="text-stone-500 text-sm">
+                                    {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })}
+                                </p>
+                            </div>
+                        </Link>
+                    ))}
                 </div>
-            )}
+
+                {posts.length === 0 && (
+                    <div className="text-center py-16 bg-stone-50 rounded-xl">
+                        <p className="text-stone-500 text-lg mb-4">No posts found in {categoryLabel}.</p>
+                        <Link href="/insights" className="text-stone-700 hover:text-stone-900 font-medium">
+                            Browse all insights →
+                        </Link>
+                    </div>
+                )}
+            </Container>
         </div>
     );
 }

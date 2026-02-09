@@ -158,13 +158,13 @@ export default async function TownPage({
                 <section className="py-16 border-b border-stone-100">
                     <Container>
                         <div className="max-w-3xl mx-auto">
-                            <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">About {town.name}</h2>
+                            <h2 className="text-2xl font-medium text-stone-900 mb-6 font-serif">About {town.name}</h2>
                             {town.overviewLong ? (
-                                <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                                <div className="prose prose-stone max-w-none text-stone-600 leading-relaxed">
                                     <PortableText value={town.overviewLong as any} />
                                 </div>
                             ) : (
-                                <p className="text-slate-500 italic">Description coming soon.</p>
+                                <p className="text-stone-500 italic">Description coming soon.</p>
                             )}
                         </div>
                     </Container>
@@ -175,10 +175,10 @@ export default async function TownPage({
                     <section className="py-16 border-b border-stone-100 bg-stone-50">
                         <Container>
                             <div className="max-w-3xl mx-auto">
-                                <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                <h2 className="text-2xl font-medium text-stone-900 mb-6 font-serif">
                                     Living in {town.name}
                                 </h2>
-                                <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                                <div className="prose prose-stone max-w-none text-stone-600 leading-relaxed">
                                     <p className="whitespace-pre-line">{town.lifestyle}</p>
                                 </div>
                             </div>
@@ -191,10 +191,10 @@ export default async function TownPage({
                     <section className="py-16 border-b border-stone-100">
                         <Container>
                             <div className="max-w-3xl mx-auto">
-                                <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                <h2 className="text-2xl font-medium text-stone-900 mb-6 font-serif">
                                     Real Estate in {town.name}
                                 </h2>
-                                <div className="prose prose-stone max-w-none text-slate-600 leading-relaxed">
+                                <div className="prose prose-stone max-w-none text-stone-600 leading-relaxed">
                                     <p className="whitespace-pre-line">{town.marketNotes}</p>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@ export default async function TownPage({
                     <section className="py-16 border-b border-stone-100 bg-stone-50">
                         <Container>
                             <div className="max-w-3xl mx-auto">
-                                <h2 className="text-2xl font-bold text-slate-900 mb-8 font-serif">
+                                <h2 className="text-2xl font-medium text-stone-900 mb-8 font-serif">
                                     Frequently Asked Questions About {town.name}
                                 </h2>
                                 <TownFAQs faqs={town.faqs} townName={town.name} />
@@ -221,14 +221,14 @@ export default async function TownPage({
                     <section className="py-16 bg-stone-50 border-b border-stone-100">
                         <Container>
                             <div className="max-w-3xl mx-auto">
-                                <h2 className="text-2xl font-bold text-slate-900 mb-6 font-serif">
+                                <h2 className="text-2xl font-medium text-stone-900 mb-6 font-serif">
                                     What Makes {town.name} Special
                                 </h2>
                                 <ul className="space-y-3">
                                     {town.highlights.map((highlight, index) => (
                                         <li key={index} className="flex items-start">
-                                            <span className="text-blue-600 mr-3 flex-shrink-0">•</span>
-                                            <span className="text-slate-600">{highlight}</span>
+                                            <span className="text-stone-500 mr-3 flex-shrink-0">•</span>
+                                            <span className="text-stone-600">{highlight}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -284,20 +284,20 @@ export default async function TownPage({
                 {/* Neighborhoods */}
                 <section className="py-16 border-b border-stone-100">
                     <Container>
-                        <h2 className="text-3xl font-bold text-slate-900 mb-8 font-serif text-center">Neighborhoods</h2>
+                        <h2 className="text-3xl font-medium text-stone-900 mb-8 font-serif text-center">Neighborhoods</h2>
                         {neighborhoods.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {neighborhoods.map((neighborhood) => (
                                     <Link
                                         key={neighborhood._id}
                                         href={`/towns/${townSlug}/${neighborhood.slug}`}
-                                        className="group block p-6 bg-white border border-stone-200 rounded-xl shadow-sm hover:shadow-lg transition-all hover:border-blue-300"
+                                        className="group block p-6 bg-white border border-stone-200 rounded-xl shadow-sm hover:shadow-lg transition-all hover:border-stone-400"
                                     >
-                                        <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                                        <h3 className="text-xl font-semibold text-stone-900 mb-2 group-hover:text-stone-700 transition-colors">
                                             {neighborhood.name}
                                         </h3>
                                         {neighborhood.overview && (
-                                            <p className="text-slate-600 line-clamp-3 text-sm">
+                                            <p className="text-stone-600 line-clamp-3 text-sm">
                                                 {neighborhood.overview}
                                             </p>
                                         )}
@@ -306,7 +306,7 @@ export default async function TownPage({
                             </div>
                         ) : (
                             <div className="text-center py-10 bg-stone-50 rounded-lg">
-                                <p className="text-slate-500">Neighborhood guides coming soon for {town.name}.</p>
+                                <p className="text-stone-500">Neighborhood guides coming soon for {town.name}.</p>
                             </div>
                         )}
                     </Container>

@@ -246,7 +246,7 @@ export default function HomeSearchClient() {
 
   const displayedListings = showSaved ? savedListings : listings;
   const displayTotal = showSaved ? savedListings.length : total;
-  const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [viewMode, setViewMode] = useState<"map" | "list">("list");
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const [selectedListing, setSelectedListing] = useState<Listing | null>(() => {
@@ -757,116 +757,114 @@ export default function HomeSearchClient() {
               </div>
             )}
 
-            <div className="flex lg:hidden items-center gap-3">
-              <button
-                type="button"
-                className={`px-4 py-2 rounded-full text-sm border ${viewMode === "map"
-                  ? "border-stone-900 bg-stone-900 text-white"
-                  : "border-stone-300 text-stone-600"
-                  }`}
-                onClick={() => setViewMode("map")}
-              >
-                Map
-              </button>
-              <button
-                type="button"
-                className={`px-4 py-2 rounded-full text-sm border ${viewMode === "list"
-                  ? "border-stone-900 bg-stone-900 text-white"
-                  : "border-stone-300 text-stone-600"
-                  }`}
-                onClick={() => setViewMode("list")}
-              >
-                List
-              </button>
-            </div>
+
           </div>
         </div>
       </div>
 
       <div className="flex flex-col lg:flex-row min-h-[calc(100vh-320px)] lg:h-[calc(100vh-200px)] lg:overflow-hidden">
-        {(viewMode === "map" || typeof window === "undefined") && (
-          <div className="relative flex-1 min-h-[420px] lg:min-h-0 bg-stone-200 z-0">
-            <HomeSearchMap
-              listings={hasSearched || showSaved ? displayedListings : []}
-              center={defaultCenter}
-              onBoundsChange={handleBoundsChange}
-              onSelectListing={openListing}
-            />
-            {pendingBounds && (
-              <div className="absolute top-4 left-1/2 -translate-x-1/2">
-                <button
-                  type="button"
-                  onClick={handleSearchArea}
-                  className="px-4 py-2 rounded-full bg-white text-stone-800 text-sm shadow-md border border-stone-200 hover:border-stone-300"
-                >
-                  Search this area
-                </button>
+        <div className={`relative flex-1 min-h-[420px] lg:min-h-0 bg-stone-200 z-0 ${viewMode === 'list' ? 'hidden lg:block' : 'block'}`}>
+          <HomeSearchMap
+            listings={hasSearched || showSaved ? displayedListings : []}
+            center={defaultCenter}
+            onBoundsChange={handleBoundsChange}
+            onSelectListing={openListing}
+          />
+          {pendingBounds && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2">
+              <button
+                type="button"
+                onClick={handleSearchArea}
+                className="px-4 py-2 rounded-full bg-white text-stone-800 text-sm shadow-md border border-stone-200 hover:border-stone-300"
+              >
+                Search this area
+              </button>
+            </div>
+          )}
+        </div>
+
+        <aside className={`w-full lg:w-[520px] border-l border-stone-200 bg-white lg:h-full lg:overflow-y-auto ${viewMode === 'map' ? 'hidden lg:block' : 'block'}`}>
+          <div className="p-6 border-b border-stone-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-stone-500">Results</p>
+                <p className="text-lg font-semibold text-stone-900">
+                  {displayTotal} {displayTotal === 1 ? "listing" : "listings"}
+                </p>
               </div>
+              <span className="text-xs text-stone-400">
+                Sorted by {sort.field}
+              </span>
+            </div>
+          </div>
+
+          <div className="p-6 space-y-6">
+            {loading ? (
+              <LoadingState />
+            ) : displayedListings.length === 0 ? (
+              showSaved ? (
+                <div className="text-center py-20">
+                  <p className="text-stone-500">You haven't saved any homes yet.</p>
+                  <button
+                    onClick={() => setShowSaved(false)}
+                    className="mt-4 text-rose-600 hover:underline"
+                  >
+                    Browse listings
+                  </button>
+                </div>
+              ) : (
+                <EmptyState />
+              )
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {displayedListings.map((listing) => (
+                    <ListingCard
+                      key={listing.id}
+                      listing={listing}
+                      onSelect={openListing}
+                      isSaved={isSaved(listing.id)}
+                      onToggleSave={(e) => {
+                        e.stopPropagation();
+                        toggleSave(listing.id);
+                      }}
+                    />
+                  ))}
+                </div>
+                {!showSaved && totalPages > 1 && (
+                  <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                )}
+              </>
             )}
           </div>
-        )}
-
-        {(hasSearched || viewMode === "list") && (
-          <aside className="w-full lg:w-[520px] border-l border-stone-200 bg-white lg:h-full lg:overflow-y-auto">
-            <div className="p-6 border-b border-stone-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-stone-500">Results</p>
-                  <p className="text-lg font-semibold text-stone-900">
-                    {displayTotal} {displayTotal === 1 ? "listing" : "listings"}
-                  </p>
-                </div>
-                <span className="text-xs text-stone-400">
-                  Sorted by {sort.field}
-                </span>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-6">
-              {loading ? (
-                <LoadingState />
-              ) : displayedListings.length === 0 ? (
-                showSaved ? (
-                  <div className="text-center py-20">
-                    <p className="text-stone-500">You haven't saved any homes yet.</p>
-                    <button
-                      onClick={() => setShowSaved(false)}
-                      className="mt-4 text-rose-600 hover:underline"
-                    >
-                      Browse listings
-                    </button>
-                  </div>
-                ) : (
-                  <EmptyState />
-                )
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {displayedListings.map((listing) => (
-                      <ListingCard
-                        key={listing.id}
-                        listing={listing}
-                        onSelect={openListing}
-                        isSaved={isSaved(listing.id)}
-                        onToggleSave={(e) => {
-                          e.stopPropagation();
-                          toggleSave(listing.id);
-                        }}
-                      />
-                    ))}
-                  </div>
-                  {!showSaved && totalPages > 1 && (
-                    <Pagination
-                      page={page}
-                      totalPages={totalPages}
-                      onPageChange={handlePageChange}
-                    />
-                  )}
-                </>
-              )}
-            </div>
-          </aside>
-        )}
+        </aside>
+        {/* Floating Mobile Toggle Button */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden">
+          <button
+            onClick={() => setViewMode(prev => prev === 'list' ? 'map' : 'list')}
+            className="flex items-center gap-2 bg-stone-900 text-white px-6 py-3 rounded-full shadow-xl font-medium text-sm transition-transform active:scale-95"
+          >
+            {viewMode === 'list' ? (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+                Show Map
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                Show List
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {selectedListing && (

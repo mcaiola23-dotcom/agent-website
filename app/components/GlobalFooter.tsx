@@ -100,13 +100,17 @@ export default function GlobalFooter() {
                 </div>
 
                 {/* Copyright Bar */}
-                <div className="py-6 border-t border-stone-200 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <p className="text-sm text-stone-400">
-                        &copy; {new Date().getFullYear()} Matt Caiola Luxury Properties. All rights reserved.
-                    </p>
-                    <p className="text-xs text-stone-400">
-                        Licensed with Higgins Group Private Brokerage
-                    </p>
+                <div className="py-6 border-t border-stone-200 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-stone-500">
+                    <p>&copy; {new Date().getFullYear()} Matt Caiola Luxury Properties. All rights reserved.</p>
+                    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+                        <span>Licensed with Higgins Group Private Brokerage</span>
+                        <span className="hidden md:inline text-stone-300">|</span>
+                        <span>Equal Housing Opportunity</span>
+                        <span className="hidden md:inline text-stone-300">|</span>
+                        <a href="#" className="hover:text-stone-900 transition-colors">
+                            Designed by Lunar Digital
+                        </a>
+                    </div>
                 </div>
             </Container>
         </footer>

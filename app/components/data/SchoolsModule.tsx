@@ -43,7 +43,7 @@ export function SchoolsModule({
     isNeighborhoodContext = false,
 }: SchoolsModuleProps) {
     const [activeLevel, setActiveLevel] = useState<SchoolLevel>('primary');
-    
+
     // Get schools data
     const result = isNeighborhoodContext && neighborhoodCenter
         ? getNearbySchoolsForNeighborhood(townSlug, neighborhoodCenter)
@@ -84,22 +84,22 @@ export function SchoolsModule({
                     Schools in {townName}, CT
                 </h2>
                 <div className="flex flex-wrap gap-2 mt-4">
-                    <TabPill 
-                        active={activeLevel === 'primary'} 
+                    <TabPill
+                        active={activeLevel === 'primary'}
                         onClick={() => setActiveLevel('primary')}
                         count={elementaryCount}
                     >
                         Primary Schools
                     </TabPill>
-                    <TabPill 
-                        active={activeLevel === 'middle'} 
+                    <TabPill
+                        active={activeLevel === 'middle'}
                         onClick={() => setActiveLevel('middle')}
                         count={middleCount}
                     >
                         Middle Schools
                     </TabPill>
-                    <TabPill 
-                        active={activeLevel === 'high'} 
+                    <TabPill
+                        active={activeLevel === 'high'}
                         onClick={() => setActiveLevel('high')}
                         count={highCount}
                     >
@@ -111,7 +111,7 @@ export function SchoolsModule({
             {/* Description */}
             <div className="px-4 md:px-6 py-4 bg-stone-50 border-b border-stone-100">
                 <p className="text-sm text-slate-600">
-                    The following schools are {isNeighborhoodContext ? 'near' : 'in'} {townName}. 
+                    The following schools are {isNeighborhoodContext ? 'near' : 'in'} {townName}.
                     School assignment depends on residence address — verify enrollment with the district.
                 </p>
                 <p className="text-xs text-slate-400 mt-1">
@@ -143,9 +143,9 @@ export function SchoolsModule({
                     </thead>
                     <tbody>
                         {activeSchools.map((school, index) => (
-                            <SchoolRow 
-                                key={index} 
-                                school={school} 
+                            <SchoolRow
+                                key={index}
+                                school={school}
                                 showDistance={isNeighborhoodContext}
                             />
                         ))}
@@ -162,7 +162,7 @@ export function SchoolsModule({
                             href={districtUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline font-medium inline-flex items-center gap-1"
+                            className="text-stone-700 hover:underline font-medium inline-flex items-center gap-1"
                         >
                             {district}
                             <ExternalLinkIcon />
@@ -172,7 +172,7 @@ export function SchoolsModule({
                         href="https://edsight.ct.gov"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1"
+                        className="text-sm text-stone-700 hover:underline inline-flex items-center gap-1"
                     >
                         View all on CT EdSight
                         <ExternalLinkIcon />
@@ -188,40 +188,39 @@ export function SchoolsModule({
     );
 }
 
-function TabPill({ 
-    active, 
-    onClick, 
-    children, 
-    count 
-}: { 
-    active: boolean; 
-    onClick: () => void; 
+function TabPill({
+    active,
+    onClick,
+    children,
+    count
+}: {
+    active: boolean;
+    onClick: () => void;
     children: React.ReactNode;
     count: number;
 }) {
     return (
         <button
             onClick={onClick}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                active 
-                    ? 'bg-slate-900 text-white' 
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${active
+                    ? 'bg-slate-900 text-white'
                     : 'bg-stone-100 text-slate-600 hover:bg-stone-200'
-            }`}
+                }`}
         >
             {children} ({count})
         </button>
     );
 }
 
-function SchoolRow({ 
-    school, 
-    showDistance 
-}: { 
-    school: School; 
+function SchoolRow({
+    school,
+    showDistance
+}: {
+    school: School;
     showDistance: boolean;
 }) {
     const ctReportCardUrl = `https://edsight.ct.gov/SASPortal/main.do?schoolSearch=${encodeURIComponent(school.name)}`;
-    
+
     return (
         <tr className="border-b border-stone-100 hover:bg-stone-50 transition-colors">
             {/* Icon */}
@@ -230,7 +229,7 @@ function SchoolRow({
                     <SchoolIcon />
                 </div>
             </td>
-            
+
             {/* Name & Address */}
             <td className="px-4 md:px-6 py-4">
                 <div className="font-medium text-slate-900 flex items-center gap-2">
@@ -240,32 +239,32 @@ function SchoolRow({
                 <div className="text-xs text-slate-500 mt-1 uppercase">
                     {school.address}
                     {showDistance && school.distance !== undefined && (
-                        <span className="ml-2 text-blue-600">
+                        <span className="ml-2 text-stone-600">
                             ~{school.distance} mi away
                         </span>
                     )}
                 </div>
             </td>
-            
+
             {/* Category */}
             <td className="px-4 md:px-6 py-4 hidden md:table-cell">
                 <span className="text-sm text-slate-600">PUBLIC</span>
             </td>
-            
+
             {/* Grades */}
             <td className="px-4 md:px-6 py-4">
-                <span className="text-sm text-blue-600 font-medium">
+                <span className="text-sm text-stone-700 font-medium">
                     {school.grades.replace('-', ' - ')}
                 </span>
             </td>
-            
+
             {/* CT Report Card Link */}
             <td className="px-4 md:px-6 py-4 hidden lg:table-cell">
                 <a
                     href={ctReportCardUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1"
+                    className="text-sm text-stone-700 hover:underline inline-flex items-center gap-1"
                 >
                     View Report
                     <ExternalLinkIcon />
