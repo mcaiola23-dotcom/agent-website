@@ -2,8 +2,12 @@
 
 import { useState, useMemo } from "react";
 
-export default function MortgageCalculator() {
-    const [homePrice, setHomePrice] = useState(750000);
+interface MortgageCalculatorProps {
+    initialHomePrice?: number;
+}
+
+export default function MortgageCalculator({ initialHomePrice = 750000 }: MortgageCalculatorProps) {
+    const [homePrice, setHomePrice] = useState(initialHomePrice);
     const [downPaymentPercent, setDownPaymentPercent] = useState(20);
     const [interestRate, setInterestRate] = useState(6.5);
     const [loanTerm, setLoanTerm] = useState(30);

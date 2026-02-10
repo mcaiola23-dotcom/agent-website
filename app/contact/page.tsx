@@ -1,5 +1,6 @@
 import ContactForm from "../components/ContactForm";
 import Container from "../components/Container";
+import EmailSignupSection from "@/app/components/EmailSignupSection";
 import Image from "next/image";
 
 export const metadata = {
@@ -120,6 +121,7 @@ export default function ContactPage() {
                     </div>
                 </div>
             </Container>
+            <EmailSignupSection />
         </div>
     );
 }

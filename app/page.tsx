@@ -66,11 +66,22 @@ export default async function Home() {
       <ExploreTownsSection towns={towns} />
 
       {/* Mortgage Calculator */}
-      <MortgageCalculator />
+      <MortgageCalculator initialHomePrice={1250000} />
 
       {/* Latest Insights */}
-      <section className="py-20 bg-stone-50 border-y border-stone-200">
-        <div className="container mx-auto px-4">
+      <section className="relative py-20 bg-stone-50 border-y border-stone-200 overflow-hidden">
+        {/* Subtle Background Pattern/Image */}
+        <div
+          className="absolute inset-0 opacity-40 pointer-events-none"
+          style={{
+            backgroundImage: "url('/visual/stock/AdobeStock_584454872.jpeg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'grayscale(100%)'
+          }}
+        />
+
+        <div className="relative z-10 container mx-auto px-4">
           <div className="flex justify-between items-end mb-12">
             <div>
               <h2 className="text-3xl font-bold text-stone-900 mb-2">Latest Insights</h2>
@@ -113,35 +124,41 @@ export default async function Home() {
       {/* Agent Intro */}
       <AgentIntroSection />
 
-      {/* Footer CTA */}
-      <section className="relative py-20 text-white text-center overflow-hidden">
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/visual/home/hero-2.jpg')" }}
-        />
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-stone-900/85" />
-
-        <div className="relative z-10 container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to make a move?</h2>
-          <p className="text-stone-300 text-lg mb-10 max-w-2xl mx-auto">
-            Whether you&apos;re curious about your home&apos;s value or ready to start touring, I&apos;m here to help you take the next step.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <Link
-              href="/home-value"
-              className="inline-block px-8 py-3 bg-transparent hover:bg-white/10 text-white font-medium rounded-none border-[3px] border-white transition-colors text-lg"
-            >
-              Get Home Estimate
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-block px-8 py-3 bg-transparent hover:bg-white/10 text-white font-medium rounded-none border-[3px] border-white transition-colors text-lg"
-            >
-              Contact Matt
-            </Link>
+      {/* Footer CTA - Split Layout */}
+      <section className="bg-stone-900 text-white grid grid-cols-1 lg:grid-cols-2">
+        {/* Left: Content */}
+        <div className="flex items-center justify-center py-20 px-4 order-2 lg:order-1">
+          <div className="max-w-xl mx-auto text-center lg:text-left">
+            <h2 className="font-serif text-3xl md:text-4xl font-medium mb-6">
+              Ready to make a move?
+            </h2>
+            <p className="text-lg text-stone-300 mb-8 leading-relaxed">
+              Whether you&apos;re curious about your home&apos;s value or ready to start touring, I&apos;m here to help you take the next step.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Link
+                href="/home-value"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-stone-900 font-semibold rounded-none hover:bg-stone-100 transition-colors"
+              >
+                Get Home Estimate
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-white font-semibold rounded-none hover:bg-white/10 transition-colors"
+              >
+                Contact Matt
+              </Link>
+            </div>
           </div>
+        </div>
+
+        {/* Right: Image */}
+        <div className="relative h-[400px] lg:h-auto order-1 lg:order-2">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/visual/stock/AdobeStock_521077579.jpeg')" }}
+          />
+          <div className="absolute inset-0 bg-stone-900/20" />
         </div>
       </section>
 

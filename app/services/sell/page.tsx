@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/app/components/Container";
 import ClosingCostEstimator from "@/app/components/ClosingCostEstimator";
+import EmailSignupSection from "@/app/components/EmailSignupSection";
 
 export const metadata: Metadata = {
   title: "Sell Your Home in Fairfield County CT | Listing Representation",
@@ -17,7 +18,7 @@ export default function SellPage() {
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-50"
-          style={{ backgroundImage: "url('/visual/home/living-room-interior.jpg')" }}
+          style={{ backgroundImage: "url('/visual/stock/AdobeStock_509621631.jpeg')" }}
         />
         <Container className="relative z-10 py-20 md:py-28">
           <div className="max-w-4xl">
@@ -55,7 +56,7 @@ export default function SellPage() {
       </section>
 
       {/* Value Props */}
-      <section className="py-16 md:py-20 bg-stone-50">
+      <section className="pt-16 md:pt-20 pb-0 bg-stone-50">
         <Container>
           <div className="text-center mb-12">
             <h2 className="font-serif text-3xl md:text-4xl font-medium text-stone-900 mb-4">
@@ -113,21 +114,15 @@ export default function SellPage() {
       </section>
 
       {/* How We Work */}
-      <section className="relative py-16 md:py-20 overflow-hidden">
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/visual/home/coastal-sunset.jpg')" }}
-        />
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-stone-900/85" />
+      <section className="relative pt-8 pb-16 md:pb-20 bg-stone-50 overflow-hidden">
+        {/* Removed Dark Background/Overlay - using light theme now */}
         <Container className="relative z-10">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-3xl md:text-4xl font-medium text-white mb-4">
+              <h2 className="font-serif text-3xl md:text-4xl font-medium text-stone-900 mb-4">
                 How We Work Together
               </h2>
-              <p className="text-lg text-stone-300">
+              <p className="text-lg text-stone-600">
                 A structured approach that keeps you informed and in control.
               </p>
             </div>
@@ -135,60 +130,60 @@ export default function SellPage() {
             <ol className="space-y-8">
               <li className="flex gap-6">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-white text-stone-900 font-semibold">
+                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-stone-900 text-white font-semibold">
                     1
                   </div>
                 </div>
                 <div className="pt-1">
-                  <h3 className="text-lg font-semibold text-white mb-2">
+                  <h3 className="text-lg font-semibold text-stone-900 mb-2">
                     Initial Consultation
                   </h3>
-                  <p className="text-stone-300 leading-relaxed">
+                  <p className="text-stone-600 leading-relaxed">
                     Walk me through your home, timeline, and goals. I'll share preliminary pricing perspective and outline next steps.
                   </p>
                 </div>
               </li>
               <li className="flex gap-6">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-white text-stone-900 font-semibold">
+                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-stone-900 text-white font-semibold">
                     2
                   </div>
                 </div>
                 <div className="pt-1">
-                  <h3 className="text-lg font-semibold text-white mb-2">
+                  <h3 className="text-lg font-semibold text-stone-900 mb-2">
                     Pricing & Preparation
                   </h3>
-                  <p className="text-stone-300 leading-relaxed">
+                  <p className="text-stone-600 leading-relaxed">
                     We finalize list price, coordinate any prep work or staging, and schedule professional photography.
                   </p>
                 </div>
               </li>
               <li className="flex gap-6">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-white text-stone-900 font-semibold">
+                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-stone-900 text-white font-semibold">
                     3
                   </div>
                 </div>
                 <div className="pt-1">
-                  <h3 className="text-lg font-semibold text-white mb-2">
+                  <h3 className="text-lg font-semibold text-stone-900 mb-2">
                     Marketing & Showings
                   </h3>
-                  <p className="text-stone-300 leading-relaxed">
+                  <p className="text-stone-600 leading-relaxed">
                     Your listing is promoted across MLS, syndicated platforms, and targeted channels. Showings are managed to minimize disruption.
                   </p>
                 </div>
               </li>
               <li className="flex gap-6">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-white text-stone-900 font-semibold">
+                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-stone-900 text-white font-semibold">
                     4
                   </div>
                 </div>
                 <div className="pt-1">
-                  <h3 className="text-lg font-semibold text-white mb-2">
+                  <h3 className="text-lg font-semibold text-stone-900 mb-2">
                     Negotiation & Closing
                   </h3>
-                  <p className="text-stone-300 leading-relaxed">
+                  <p className="text-stone-600 leading-relaxed">
                     We evaluate offers together, negotiate terms, and coordinate through inspection, appraisal, and closing.
                   </p>
                 </div>
@@ -199,17 +194,26 @@ export default function SellPage() {
       </section>
 
       {/* Sellers Guide */}
-      <section className="py-16 md:py-20 bg-stone-100">
-        <Container>
+      <section className="relative py-16 md:py-20 bg-stone-900 overflow-hidden">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/visual/stock/AdobeStock_158911146.jpeg')" }}
+        />
+        {/* Overlay */}
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-stone-900/50" />
+
+        <Container className="relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <p className="text-sm font-semibold tracking-[0.2em] text-stone-500 uppercase mb-3">
+              <p className="text-sm font-semibold tracking-[0.2em] text-stone-300 uppercase mb-3">
                 Seller Resources
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl font-medium text-stone-900 mb-4">
+              <h2 className="font-serif text-3xl md:text-4xl font-medium text-white mb-4">
                 Connecticut Seller's Guide
               </h2>
-              <p className="text-lg text-stone-600">
+              <p className="text-lg text-stone-200">
                 Essential information for navigating the Connecticut home selling process.
               </p>
             </div>
@@ -276,19 +280,20 @@ export default function SellPage() {
       </section>
 
       {/* Closing Cost Estimator */}
-      <ClosingCostEstimator />
+      <ClosingCostEstimator initialSalePrice={1250000} />
 
       {/* Final CTA */}
-      <section className="py-16 md:py-20 bg-stone-50">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-4xl font-medium text-stone-900 mb-4">
+      <section className="bg-stone-50 grid grid-cols-1 lg:grid-cols-2">
+        {/* Left: Content */}
+        <div className="flex items-center justify-center py-20 px-4 order-2 lg:order-1">
+          <div className="max-w-xl mx-auto text-center lg:text-left">
+            <h2 className="font-serif text-3xl md:text-4xl font-medium text-stone-900 mb-6">
               Ready to Explore Your Options?
             </h2>
-            <p className="text-lg text-stone-600 mb-8">
+            <p className="text-lg text-stone-600 mb-8 leading-relaxed">
               Start with a home value estimate or schedule a consultation to discuss your timeline and goals.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href="/home-value"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-stone-900 text-white font-semibold rounded-none hover:bg-stone-800 transition-colors"
@@ -306,8 +311,17 @@ export default function SellPage() {
               </Link>
             </div>
           </div>
-        </Container>
+        </div>
+
+        {/* Right: Image */}
+        <div className="relative h-[400px] lg:h-auto order-1 lg:order-2">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/visual/stock/AdobeStock_345186238.jpeg')" }}
+          />
+        </div>
       </section>
+      <EmailSignupSection />
     </div>
   );
 }

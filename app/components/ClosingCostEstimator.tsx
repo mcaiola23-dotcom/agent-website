@@ -2,8 +2,12 @@
 
 import { useState, useMemo } from "react";
 
-export default function ClosingCostEstimator() {
-    const [salePrice, setSalePrice] = useState(1000000);
+interface ClosingCostEstimatorProps {
+    initialSalePrice?: number;
+}
+
+export default function ClosingCostEstimator({ initialSalePrice = 1000000 }: ClosingCostEstimatorProps) {
+    const [salePrice, setSalePrice] = useState(initialSalePrice);
 
     const costs = useMemo(() => {
         // Connecticut-specific closing costs for sellers

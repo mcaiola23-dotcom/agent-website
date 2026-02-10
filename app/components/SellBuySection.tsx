@@ -18,7 +18,7 @@ export default function SellBuySection() {
             >
                 {/* Background Image */}
                 <Image
-                    src="/visual/home/hero-2.jpg"
+                    src="/visual/stock/AdobeStock_245746541.jpeg"
                     alt="Luxury home interior"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -49,7 +49,7 @@ export default function SellBuySection() {
             >
                 {/* Background Image */}
                 <Image
-                    src="/visual/home/hero-3.jpg"
+                    src="/visual/stock/AdobeStock_552206764.jpeg"
                     alt="Luxury property exterior"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"

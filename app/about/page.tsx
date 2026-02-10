@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/app/components/Container";
+import EmailSignupSection from "@/app/components/EmailSignupSection";
 
 export const metadata: Metadata = {
   title: "About Matt Caiola | Fairfield County Real Estate",
@@ -297,6 +298,7 @@ export default function AboutPage() {
           </div>
         </Container>
       </section>
+      <EmailSignupSection />
     </div>
   );
 }

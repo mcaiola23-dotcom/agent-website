@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/app/components/Container";
 import MortgageCalculator from "@/app/components/MortgageCalculator";
+import EmailSignupSection from "@/app/components/EmailSignupSection";
 
 export const metadata: Metadata = {
   title: "Buy in Fairfield County CT | Buyer Representation",
@@ -17,7 +18,7 @@ export default function BuyPage() {
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-40"
-          style={{ backgroundImage: "url('/visual/home/hero-3.jpg')" }}
+          style={{ backgroundImage: "url('/visual/stock/AdobeStock_559253231.jpeg')" }}
         />
         <Container className="relative z-10 py-20 md:py-28">
           <div className="max-w-4xl">
@@ -113,6 +114,47 @@ export default function BuyPage() {
         </Container>
       </section>
 
+      {/* Explore Towns - Moved & Updated */}
+      <section className="relative py-20 md:py-24 bg-stone-900 overflow-hidden">
+        {/* Aerial Background */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/visual/stock/AdobeStock_245746541.jpeg')" }}
+        />
+        <div className="absolute inset-0 bg-stone-900/60" />
+
+        <Container className="relative z-10">
+          <div className="max-w-3xl mx-auto text-center text-white">
+            <h2 className="font-serif text-3xl md:text-4xl font-medium mb-6">
+              Explore Towns & Neighborhoods
+            </h2>
+            <p className="text-lg text-stone-200 mb-10 leading-relaxed">
+              Start with a town overview, then drill down to specific neighborhoods that match your lifestyle.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/towns"
+                className="inline-flex items-center justify-center px-8 py-3 bg-white text-stone-900 font-semibold rounded-none hover:bg-stone-100 transition-colors"
+              >
+                Browse All Towns
+              </Link>
+              <Link
+                href="/home-search"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-white text-white font-semibold rounded-none hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Search Listings
+              </Link>
+            </div>
+            <p className="mt-8 text-sm text-stone-400">
+              Common starting points: Greenwich, New Canaan, Darien, Westport, Fairfield, Stamford, Norwalk, Ridgefield.
+            </p>
+          </div>
+        </Container>
+      </section>
+
       {/* How We Work */}
       <section className="py-16 md:py-20">
         <Container>
@@ -193,17 +235,25 @@ export default function BuyPage() {
       </section>
 
       {/* Buyers Guide */}
-      <section className="py-16 md:py-20 bg-stone-100">
-        <Container>
+      <section className="relative py-16 md:py-20 bg-stone-900 overflow-hidden">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/visual/stock/AdobeStock_552206764.jpeg')" }}
+        />
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-stone-900/60" />
+
+        <Container className="relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <p className="text-sm font-semibold tracking-[0.2em] text-stone-500 uppercase mb-3">
+              <p className="text-sm font-semibold tracking-[0.2em] text-stone-300 uppercase mb-3">
                 Buyer Resources
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl font-medium text-stone-900 mb-4">
+              <h2 className="font-serif text-3xl md:text-4xl font-medium text-white mb-4">
                 Fairfield County Buyer's Guide
               </h2>
-              <p className="text-lg text-stone-600">
+              <p className="text-lg text-stone-200">
                 Essential information for navigating the Connecticut home buying process.
               </p>
             </div>
@@ -271,53 +321,20 @@ export default function BuyPage() {
       </section>
 
       {/* Mortgage Calculator */}
-      <MortgageCalculator />
-
-      {/* Explore Towns CTA */}
-      <section className="py-16 md:py-20 bg-stone-50">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-4xl font-medium text-stone-900 mb-4">
-              Explore Towns & Neighborhoods
-            </h2>
-            <p className="text-lg text-stone-600 mb-8">
-              Start with a town overview, then drill down to specific neighborhoods that match your lifestyle.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/towns"
-                className="inline-flex items-center justify-center px-8 py-3 bg-stone-900 text-white font-semibold rounded-none hover:bg-stone-800 transition-colors"
-              >
-                Browse All Towns
-              </Link>
-              <Link
-                href="/home-search"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-stone-900 text-stone-900 font-semibold rounded-none hover:bg-stone-100 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                Search Listings
-              </Link>
-            </div>
-            <p className="mt-6 text-sm text-stone-500">
-              Common starting points: Greenwich, New Canaan, Darien, Westport, Fairfield, Stamford, Norwalk, Ridgefield.
-            </p>
-          </div>
-        </Container>
-      </section>
+      <MortgageCalculator initialHomePrice={1250000} />
 
       {/* Final CTA */}
-      <section className="py-16 md:py-20 bg-stone-900 text-white">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-4xl font-medium mb-4">
+      <section className="bg-stone-900 text-white grid grid-cols-1 lg:grid-cols-2">
+        {/* Left: Content */}
+        <div className="flex items-center justify-center py-20 px-4 order-2 lg:order-1">
+          <div className="max-w-xl mx-auto text-center lg:text-left">
+            <h2 className="font-serif text-3xl md:text-4xl font-medium mb-6">
               Ready to Start Your Search?
             </h2>
-            <p className="text-lg text-stone-300 mb-8">
+            <p className="text-lg text-stone-300 mb-8 leading-relaxed">
               Tell me what you're looking for and your ideal timing. I'll reply with a clear next step and a plan for the search.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center px-8 py-3 bg-white text-stone-900 font-semibold rounded-none hover:bg-stone-100 transition-colors"
@@ -325,15 +342,33 @@ export default function BuyPage() {
                 Contact Matt
               </Link>
               <Link
-                href="/home-value"
+                href="/home-search"
                 className="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-white font-semibold rounded-none hover:bg-white/10 transition-colors"
               >
-                Also Selling? Get an Estimate
+                Search Homes
+              </Link>
+            </div>
+            <div className="mt-6 text-center lg:text-left">
+              <Link
+                href="/home-value"
+                className="inline-block text-stone-400 hover:text-white underline underline-offset-4 text-sm transition-colors"
+              >
+                Also Selling? Get an Estimate &rarr;
               </Link>
             </div>
           </div>
-        </Container>
+        </div>
+
+        {/* Right: Image */}
+        <div className="relative h-[400px] lg:h-auto order-1 lg:order-2">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/visual/stock/AdobeStock_584454872.jpeg')" }}
+          />
+          <div className="absolute inset-0 bg-stone-900/10" />
+        </div>
       </section>
+      <EmailSignupSection />
     </div>
   );
 }

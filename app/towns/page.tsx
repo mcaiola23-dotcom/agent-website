@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllTowns, Town } from "../lib/sanity.queries";
 import Container from "@/app/components/Container";
+import EmailSignupSection from "@/app/components/EmailSignupSection";
 
 export const metadata: Metadata = {
     title: "Connecticut's Gold Coast Towns | Explore Fairfield County",
@@ -136,19 +137,25 @@ export default async function TownsPage() {
             </section>
 
             {/* CTA Section */}
-            <section className="py-16 md:py-20 bg-stone-100">
-                <Container>
+            <section className="relative py-20 bg-stone-900 border-t border-stone-800 overflow-hidden">
+                {/* Background Image */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-40"
+                    style={{ backgroundImage: "url('/visual/stock/AdobeStock_390225432.jpeg')" }}
+                />
+
+                <Container className="relative z-10">
                     <div className="max-w-3xl mx-auto text-center">
-                        <h2 className="font-serif text-3xl md:text-4xl font-medium text-stone-900 mb-4">
+                        <h2 className="font-serif text-3xl md:text-4xl font-medium text-white mb-6">
                             Find Your Perfect Town
                         </h2>
-                        <p className="text-lg text-stone-600 mb-8">
+                        <p className="text-lg text-stone-200 mb-10 leading-relaxed">
                             Not sure which community is right for you? Let&apos;s discuss your priorities and find the perfect match.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <div className="flex flex-col sm:flex-row gap-5 justify-center">
                             <Link
                                 href="/home-search"
-                                className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-stone-900 text-white font-semibold hover:bg-stone-800 transition-colors"
+                                className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-transparent border-2 border-white text-white font-medium rounded-none hover:bg-white/10 transition-colors"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -157,7 +164,7 @@ export default async function TownsPage() {
                             </Link>
                             <Link
                                 href="/contact"
-                                className="inline-flex items-center justify-center px-8 py-3 border-2 border-stone-900 text-stone-900 font-semibold hover:bg-stone-200 transition-colors"
+                                className="inline-flex items-center justify-center px-8 py-3 bg-transparent border-2 border-white text-white font-medium rounded-none hover:bg-white/10 transition-colors"
                             >
                                 Contact Matt
                             </Link>
@@ -165,6 +172,7 @@ export default async function TownsPage() {
                     </div>
                 </Container>
             </section>
+            <EmailSignupSection />
         </div>
     );
 }

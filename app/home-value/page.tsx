@@ -1,5 +1,6 @@
 import ValuationForm from "../components/ValuationForm";
 import Container from "../components/Container";
+import EmailSignupSection from "@/app/components/EmailSignupSection";
 import Link from "next/link";
 
 export const metadata = {
@@ -14,9 +15,12 @@ export default function HomeValuePage() {
             <section className="relative bg-stone-900 text-white overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: "url('/visual/stock/luxury-interior-hero.jpg')" }}
+                    style={{
+                        backgroundImage: "url('/visual/stock/AdobeStock_390225529.jpeg')",
+                        filter: 'brightness(1.1)'
+                    }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-stone-900/40 to-stone-900/10" />
+                <div className="absolute inset-0 bg-gradient-to-r from-stone-900/30 to-stone-900/5" />
                 <Container className="relative z-10 py-16 md:py-20">
                     <div className="max-w-2xl">
                         <p className="text-xs sm:text-sm font-semibold tracking-[0.25em] text-stone-300 uppercase mb-4">
@@ -111,18 +115,21 @@ export default function HomeValuePage() {
             </section>
 
             {/* Tips Section - HV2 */}
-            <section className="relative py-16 md:py-20 overflow-hidden">
+            <section className="relative py-16 md:py-24 overflow-hidden">
                 <div
-                    className="absolute inset-0 bg-cover bg-bottom"
-                    style={{ backgroundImage: "url('/visual/stock/new-england-estate.jpg')" }}
+                    className="absolute inset-0 bg-cover"
+                    style={{
+                        backgroundImage: "url('/visual/stock/new-england-estate.jpg')",
+                        backgroundPosition: "center 35%"
+                    }}
                 />
-                <div className="absolute inset-0 bg-white/50" />
+                <div className="absolute inset-0 bg-white/20" />
                 <Container className="relative z-10">
-                    <div className="text-center mb-12">
-                        <h2 className="font-serif text-3xl sm:text-4xl font-medium text-stone-900 mb-4">
+                    <div className="text-center mb-12 -mt-12">
+                        <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mb-4">
                             Maximize Your Home&apos;s Value
                         </h2>
-                        <p className="text-lg text-stone-600 max-w-2xl mx-auto">
+                        <p className="text-lg text-black font-medium max-w-2xl mx-auto">
                             Before selling, consider these factors that can significantly impact your home&apos;s market value.
                         </p>
                     </div>
@@ -187,6 +194,7 @@ export default function HomeValuePage() {
                     </div>
                 </Container>
             </section>
+            <EmailSignupSection />
         </div>
     );
 }
