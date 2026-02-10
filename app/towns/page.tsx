@@ -94,7 +94,7 @@ export default async function TownsPage() {
             {/* Hero Section */}
             <section className="relative bg-stone-900 overflow-hidden">
                 <div
-                    className="absolute inset-0 bg-cover bg-center opacity-50"
+                    className="absolute inset-0 bg-cover bg-center opacity-70"
                     style={{ backgroundImage: "url('/visual/home/coastal-beach.jpg')" }}
                 />
                 <Container className="relative z-10 py-20 md:py-28">

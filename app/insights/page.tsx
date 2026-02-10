@@ -30,8 +30,8 @@ export default async function InsightsPage() {
             {/* Hero Section with Background Image */}
             <section className="relative bg-stone-900 text-white overflow-hidden">
                 <div
-                    className="absolute inset-0 bg-cover bg-center opacity-40"
-                    style={{ backgroundImage: "url('/visual/stock/home-office-desk.jpg')" }}
+                    className="absolute inset-0 bg-cover bg-center opacity-75"
+                    style={{ backgroundImage: "url('/visual/stock/AdobeStock_509621631.jpeg')" }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-stone-900/80 to-stone-900/40" />
                 <Container className="relative z-10 py-20 md:py-28">

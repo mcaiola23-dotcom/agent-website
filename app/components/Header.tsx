@@ -194,7 +194,7 @@ export default function Header() {
               {/* Towns Mega Dropdown */}
               {isTownsOpen && (
                 <div
-                  className="absolute top-full left-1/2 -translate-x-1/2 mt-1 bg-white rounded-xl shadow-xl border border-stone-200 py-3 z-50 min-w-[280px]"
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-1 bg-white rounded-xl shadow-xl border border-stone-200 py-3 z-[100] min-w-[280px]"
                 >
                   <div className="grid grid-cols-2 gap-1 px-2">
                     {TOWNS.map((town) => (

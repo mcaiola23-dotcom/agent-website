@@ -329,8 +329,8 @@ export function ListingModal({
                                 </div>
 
                                 <div className="rounded-2xl border border-stone-200 bg-stone-50/50 p-5">
-                                    <div className="flex items-start gap-4">
-                                        <div className="relative h-16 w-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-white shadow-md">
+                                    <div className="flex items-center justify-center">
+                                        <div className="relative h-16 w-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-white shadow-md -mr-2">
                                             <Image
                                                 src="/brand/matt-headshot.jpg"
                                                 alt="Matt Caiola"
@@ -338,31 +338,27 @@ export function ListingModal({
                                                 className="object-cover"
                                             />
                                         </div>
-                                        <div className="flex-1 min-w-0 flex flex-col gap-1 -mt-1.5">
-                                            <div className="flex items-center gap-4">
-                                                <div className="relative h-16 w-60">
-                                                    <Image
-                                                        src="/brand/matt-caiola-logo.png"
-                                                        alt="Matt Caiola Luxury Properties"
-                                                        fill
-                                                        className="object-contain object-left"
-                                                    />
-                                                </div>
-                                                <div className="h-10 w-px bg-stone-200"></div>
-                                                <div className="relative h-14 w-56 opacity-90">
-                                                    <Image
-                                                        src="/brand/higgins-lockup.jpg"
-                                                        alt="Higgins Group Private Brokerage"
-                                                        fill
-                                                        className="object-contain object-left"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <p className="text-sm text-stone-600 -mt-2">
-                                                Interested in {listing.address.street}? I&apos;d love to help you learn more about this property.
-                                            </p>
+                                        <div className="relative h-14 w-52 flex-shrink-0">
+                                            <Image
+                                                src="/brand/matt-caiola-logo.png"
+                                                alt="Matt Caiola Luxury Properties"
+                                                fill
+                                                className="object-contain object-right"
+                                            />
+                                        </div>
+                                        <div className="h-12 w-px bg-stone-300 flex-shrink-0 mx-2"></div>
+                                        <div className="relative h-12 w-44 opacity-90 flex-shrink-0">
+                                            <Image
+                                                src="/brand/higgins-lockup.jpg"
+                                                alt="Higgins Group Private Brokerage"
+                                                fill
+                                                className="object-contain object-left"
+                                            />
                                         </div>
                                     </div>
+                                    <p className="text-sm text-stone-600 mt-3">
+                                        Interested in {listing.address.street}? I&apos;d love to help you learn more about this property.
+                                    </p>
                                     <div className="mt-4 flex flex-col sm:flex-row gap-2">
                                         <button
                                             type="button"

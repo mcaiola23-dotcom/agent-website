@@ -496,7 +496,7 @@ export default function HomeSearchClient() {
 
   return (
     <div className="min-h-screen bg-slate-50 lg:h-screen lg:overflow-hidden">
-      <div className="relative z-50 bg-stone-50 border-b border-stone-200 shadow-md">
+      <div className="relative z-30 bg-stone-50 border-b border-stone-200 shadow-md">
         <div className="max-w-[92rem] mx-auto px-3 sm:px-5 lg:px-6 py-1.5">
           <div className="flex flex-col gap-1.5">
             <div className="flex flex-col lg:flex-row lg:items-end gap-2">
