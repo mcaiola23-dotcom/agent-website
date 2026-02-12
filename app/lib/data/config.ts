@@ -30,7 +30,7 @@ export const CACHE_TTL = {
 
 // Google Places strict budget mode settings
 export const PLACES_CONFIG = {
-    maxResultsPerCategory: 6,
+    maxResultsPerCategory: 12,
     categories: ['coffee', 'restaurants', 'parksTrails', 'fitness'] as const,
     // Map our categories to Google Places types
     categoryTypeMap: {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatContentText } from "../lib/formatters";
 
 type FAQ = {
     _id: string;
@@ -48,12 +49,11 @@ export default function TownFAQs({ faqs, townName }: TownFAQsProps) {
                         className="w-full flex items-center justify-between p-5 text-left hover:bg-stone-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
                     >
                         <h3 className="text-lg font-semibold text-slate-900 pr-4">
-                            {faq.question}
+                            {formatContentText(faq.question)}
                         </h3>
                         <span
-                            className={`flex-shrink-0 text-slate-400 transition-transform duration-200 ${
-                                openIndex === index ? "rotate-180" : ""
-                            }`}
+                            className={`flex-shrink-0 text-slate-400 transition-transform duration-200 ${openIndex === index ? "rotate-180" : ""
+                                }`}
                             aria-hidden="true"
                         >
                             <svg
@@ -77,12 +77,11 @@ export default function TownFAQs({ faqs, townName }: TownFAQsProps) {
                         id={`faq-answer-${faq._id}`}
                         role="region"
                         aria-labelledby={`faq-question-${faq._id}`}
-                        className={`overflow-hidden transition-all duration-200 ${
-                            openIndex === index ? "max-h-96" : "max-h-0"
-                        }`}
+                        className={`overflow-hidden transition-all duration-200 ${openIndex === index ? "max-h-96" : "max-h-0"
+                            }`}
                     >
                         <div className="px-5 pb-5 text-slate-600 leading-relaxed border-t border-stone-100 pt-4">
-                            {faq.answer}
+                            {formatContentText(faq.answer)}
                         </div>
                     </div>
                 </div>

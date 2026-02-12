@@ -8,6 +8,9 @@ import Container from "../../../components/Container";
 
 // Data Modules
 import { DataModuleGrid } from "../../../components/data/DataModule";
+import { formatContentText } from "../../../lib/formatters";
+import AgentCTASection from "../../../components/AgentCTASection";
+import EmailSignupSection from "../../../components/EmailSignupSection";
 import { AtAGlanceModule } from "../../../components/data/AtAGlanceModule";
 import { SchoolsModule } from "../../../components/data/SchoolsModule";
 import { WalkScoreModule, WalkScoreModulePlaceholder } from "../../../components/data/WalkScoreModule";
@@ -69,6 +72,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
+// Recursively sanitize Portable Text blocks to remove em/en dashes
+function sanitizePortableText(value: any): any {
+    if (!value) return value;
+    if (Array.isArray(value)) return value.map(sanitizePortableText);
+    if (typeof value === 'object') {
+        const result: any = {};
+        for (const key of Object.keys(value)) result[key] = sanitizePortableText(value[key]);
+        return result;
+    }
+    if (typeof value === 'string') return formatContentText(value);
+    return value;
+}
+
 export default async function NeighborhoodPage({
     params,
 }: {
@@ -125,7 +141,7 @@ export default async function NeighborhoodPage({
                     </h2>
                     {neighborhood.overview ? (
                         <p className="text-lg text-stone-600 leading-relaxed">
-                            {neighborhood.overview}
+                            {formatContentText(neighborhood.overview)}
                         </p>
                     ) : (
                         <p className="text-stone-500 italic">Overview coming soon.</p>
@@ -139,7 +155,7 @@ export default async function NeighborhoodPage({
                     </h2>
                     {hasDescription ? (
                         <div className="prose prose-stone max-w-none text-stone-600 leading-relaxed">
-                            <PortableText value={neighborhood.description as any} />
+                            <PortableText value={sanitizePortableText(neighborhood.description)} />
                         </div>
                     ) : (
                         <p className="text-stone-500 italic">Description coming soon.</p>
@@ -156,7 +172,7 @@ export default async function NeighborhoodPage({
                             {neighborhood.highlights!.map((highlight, index) => (
                                 <li key={index} className="flex items-start">
                                     <span className="text-stone-400 mr-3 flex-shrink-0">•</span>
-                                    <span className="text-stone-600">{highlight}</span>
+                                    <span className="text-stone-600">{formatContentText(highlight)}</span>
                                 </li>
                             ))}
                         </ul>
@@ -186,6 +202,10 @@ export default async function NeighborhoodPage({
                     />
                 </section>
             </Container>
+
+            {/* CTA Section */}
+            <AgentCTASection />
+            <EmailSignupSection />
         </div>
     );
 }

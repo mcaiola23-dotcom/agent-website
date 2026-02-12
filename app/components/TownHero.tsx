@@ -31,7 +31,7 @@ export default function TownHero({
                     src={`/visual/towns/${imageSlug}.jpg`}
                     alt=""
                     fill
-                    className="object-cover"
+                    className={`object-cover ${imageSlug === 'darien' ? 'object-bottom' : 'object-center'}`}
                     priority
                     onError={(e) => {
                         const target = e.target as HTMLImageElement;

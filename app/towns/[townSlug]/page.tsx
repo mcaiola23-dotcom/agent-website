@@ -2,13 +2,17 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTownBySlug, getNeighborhoodsByTown } from "../../lib/sanity.queries";
-import { PortableText } from "@portabletext/react";
+import { PortableText, PortableTextComponents } from "@portabletext/react";
 import TownHero from "../../components/TownHero";
 import Container from "../../components/Container";
 import TownFAQs from "../../components/TownFAQs";
 
 // Data Modules
 import { DataModuleGrid } from "../../components/data/DataModule";
+import { formatContentText } from "../../lib/formatters";
+import AgentCTASection from "../../components/AgentCTASection";
+import SimilarTownsSection from "../../components/SimilarTownsSection";
+import EmailSignupSection from "../../components/EmailSignupSection";
 import { AtAGlanceModule } from "../../components/data/AtAGlanceModule";
 import { SchoolsModule } from "../../components/data/SchoolsModule";
 import { WalkScoreModule, WalkScoreModulePlaceholder } from "../../components/data/WalkScoreModule";
@@ -67,6 +71,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             images: [townImage],
         },
     };
+}
+
+// Custom PortableText components that sanitize em dashes
+const sanitizedComponents: PortableTextComponents = {
+    block: {
+        normal: ({ children }) => {
+            return <p>{children}</p>;
+        },
+    },
+    marks: {
+        // Override the default text rendering to sanitize
+    },
+};
+
+// Recursively sanitize Portable Text blocks to remove em dashes
+function sanitizePortableText(value: any): any {
+    if (!value) return value;
+    if (Array.isArray(value)) {
+        return value.map(sanitizePortableText);
+    }
+    if (typeof value === 'object') {
+        const result: any = {};
+        for (const key of Object.keys(value)) {
+            result[key] = sanitizePortableText(value[key]);
+        }
+        return result;
+    }
+    if (typeof value === 'string') {
+        return formatContentText(value);
+    }
+    return value;
 }
 
 export default async function TownPage({
@@ -149,7 +184,7 @@ export default async function TownPage({
             <div className="bg-white min-h-screen">
                 <TownHero
                     title={town.name}
-                    subtitle={town.overviewShort || `Discover the charm of ${town.name}`}
+                    subtitle={formatContentText(town.overviewShort) || `Discover the charm of ${town.name}`}
                     imageSlug={townSlug}
                     parentLink={{ href: "/towns", label: "Towns" }}
                 />
@@ -161,7 +196,7 @@ export default async function TownPage({
                             <h2 className="text-2xl font-medium text-stone-900 mb-6 font-serif">About {town.name}</h2>
                             {town.overviewLong ? (
                                 <div className="prose prose-stone max-w-none text-stone-600 leading-relaxed">
-                                    <PortableText value={town.overviewLong as any} />
+                                    <PortableText value={sanitizePortableText(town.overviewLong)} />
                                 </div>
                             ) : (
                                 <p className="text-stone-500 italic">Description coming soon.</p>
@@ -179,7 +214,7 @@ export default async function TownPage({
                                     Living in {town.name}
                                 </h2>
                                 <div className="prose prose-stone max-w-none text-stone-600 leading-relaxed">
-                                    <p className="whitespace-pre-line">{town.lifestyle}</p>
+                                    <p className="whitespace-pre-line">{formatContentText(town.lifestyle)}</p>
                                 </div>
                             </div>
                         </Container>
@@ -195,7 +230,7 @@ export default async function TownPage({
                                     Real Estate in {town.name}
                                 </h2>
                                 <div className="prose prose-stone max-w-none text-stone-600 leading-relaxed">
-                                    <p className="whitespace-pre-line">{town.marketNotes}</p>
+                                    <p className="whitespace-pre-line">{formatContentText(town.marketNotes)}</p>
                                 </div>
                             </div>
                         </Container>
@@ -228,7 +263,7 @@ export default async function TownPage({
                                     {town.highlights.map((highlight, index) => (
                                         <li key={index} className="flex items-start">
                                             <span className="text-stone-500 mr-3 flex-shrink-0">•</span>
-                                            <span className="text-stone-600">{highlight}</span>
+                                            <span className="text-stone-600">{formatContentText(highlight)}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -298,7 +333,7 @@ export default async function TownPage({
                                         </h3>
                                         {neighborhood.overview && (
                                             <p className="text-stone-600 line-clamp-3 text-sm">
-                                                {neighborhood.overview}
+                                                {formatContentText(neighborhood.overview)}
                                             </p>
                                         )}
                                     </Link>
@@ -324,6 +359,13 @@ export default async function TownPage({
                         />
                     </Container>
                 </section>
+
+                {/* Similar Towns */}
+                <SimilarTownsSection currentTownSlug={townSlug} />
+
+                {/* CTA Section */}
+                <AgentCTASection />
+                <EmailSignupSection />
             </div>
         </>
     );
